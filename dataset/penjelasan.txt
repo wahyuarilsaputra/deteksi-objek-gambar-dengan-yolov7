@@ -1,0 +1,1 @@
+Dataset diperoleh dari roboflow dengan dataset yang telah dilakukan anotasi sebanyak 1496 dataset image
