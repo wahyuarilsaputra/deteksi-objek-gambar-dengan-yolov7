@@ -1,0 +1,3355 @@
+
+
+<!DOCTYPE html>
+
+
+<html lang="en" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+    <title>Object Detection Fruit Freshness Menggunakan YoloV7 &#8212; 20-055 Deep Learning A</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "light";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="_static/styles/theme.css?digest=365ca57ee442770a23c6" rel="stylesheet" />
+<link href="_static/styles/bootstrap.css?digest=365ca57ee442770a23c6" rel="stylesheet" />
+<link href="_static/styles/pydata-sphinx-theme.css?digest=365ca57ee442770a23c6" rel="stylesheet" />
+
+  
+  <link href="_static/vendor/fontawesome/6.1.2/css/all.min.css?digest=365ca57ee442770a23c6" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.1.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.1.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.1.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <link rel="stylesheet" href="_static/styles/sphinx-book-theme.css?digest=14f4ca6b54d191a8c7657f6c759bf11a5fb86285" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="_static/sphinx-thebe.css" />
+    <link rel="stylesheet" type="text/css" href="_static/design-style.4045f2051d55cab465a707391d5b2007.min.css" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="_static/scripts/bootstrap.js?digest=365ca57ee442770a23c6" />
+<link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=365ca57ee442770a23c6" />
+  <script src="_static/vendor/fontawesome/6.1.2/js/all.min.js?digest=365ca57ee442770a23c6"></script>
+
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/clipboard.min.js"></script>
+    <script src="_static/copybutton.js"></script>
+    <script src="_static/scripts/sphinx-book-theme.js?digest=5a5c038af52cf7bc1a1ec88eea08e6366ee68824"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="_static/togglebutton.js"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="_static/design-tabs.js"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
+const thebe_selector = ".thebe,.cell"
+const thebe_selector_input = "pre"
+const thebe_selector_output = ".output, .cell_output"
+</script>
+    <script async="async" src="_static/sphinx-thebe.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'TrainingYoloV7';</script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="prev" title="Welcome to your Jupyter Book" href="intro.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <a class="skip-link" href="#main-content">Skip to main content</a>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>
+    Back to top
+  </button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__primary"
+          id="__primary"/>
+  <label class="overlay overlay-primary" for="__primary"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__secondary"
+          id="__secondary"/>
+  <label class="overlay overlay-secondary" for="__secondary"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+  
+    <nav class="bd-header navbar navbar-expand-lg bd-navbar">
+    </nav>
+  
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+  
+
+<a class="navbar-brand logo" href="intro.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="_static/robitt.png" class="logo__image only-light" alt="20-055 Deep Learning A - Home"/>
+    <script>document.write(`<img src="_static/robitt.png" class="logo__image only-dark" alt="20-055 Deep Learning A - Home"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item"><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="intro.html">
+                    Welcome to your Jupyter Book
+                </a>
+            </li>
+        </ul>
+        <ul class="current nav bd-sidenav">
+<li class="toctree-l1 current active"><a class="current reference internal" href="#"><strong>Object Detection Fruit Freshness Menggunakan YoloV7</strong></a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><label class="sidebar-toggle primary-toggle btn btn-sm" for="__primary" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</label></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-launch-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Launch interactive content">
+    <i class="fas fa-rocket"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://colab.research.google.com/github/wahyuarilsaputra/deteksi-objek-gambar-dengan-yolov7/blob/gh-pages/_sources/TrainingYoloV7.ipynb" target="_blank"
+   class="btn btn-sm dropdown-item"
+   title="Launch onColab"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  
+    <img src="_static/images/logo_colab.png">
+  </span>
+<span class="btn__text-container">Colab</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://github.com/wahyuarilsaputra/deteksi-objek-gambar-dengan-yolov7" target="_blank"
+   class="btn btn-sm btn-source-repository-button dropdown-item"
+   title="Source repository"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="btn__text-container">Repository</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/wahyuarilsaputra/deteksi-objek-gambar-dengan-yolov7/issues/new?title=Issue%20on%20page%20%2FTrainingYoloV7.html&body=Your%20issue%20content%20here." target="_blank"
+   class="btn btn-sm btn-source-issues-button dropdown-item"
+   title="Open an issue"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="btn__text-container">Open issue</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="_sources/TrainingYoloV7.ipynb" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.ipynb</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="theme-switch nav-link" data-mode="light"><i class="fa-solid fa-sun fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="dark"><i class="fa-solid fa-moon fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg"></i></span>
+  </button>
+`);
+</script>
+
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<label class="sidebar-toggle secondary-toggle btn btn-sm" for="__secondary"title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</label>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Object Detection Fruit Freshness Menggunakan YoloV7</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#menghubungkan-collab">1.1 Menghubungkan Collab</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#install-requirement-yolov7">1.2 Install Requirement YoloV7</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#import-dataset">1.3 Import Dataset</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#download-weight-yolov7">1.4 Download Weight YoloV7</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#training-model-yolov7">1.5 Training Model YoloV7</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#evaluasi-model">1.6 Evaluasi Model</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#prediksi-data">1.7 Prediksi Data</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#import-training-model">1.7.1 Import Training Model</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#prediksi-image">1.7.2 Prediksi Image</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#test-dengan-dataset-test">Test Dengan Dataset Test</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#membuat-bounding-box">Membuat Bounding Box</a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#prediksi-video">1.7.3 Prediksi Video</a></li>
+</ul>
+</li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article" role="main">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="object-detection-fruit-freshness-menggunakan-yolov7">
+<h1><strong>Object Detection Fruit Freshness Menggunakan YoloV7</strong><a class="headerlink" href="#object-detection-fruit-freshness-menggunakan-yolov7" title="Permalink to this heading">#</a></h1>
+<section id="menghubungkan-collab">
+<h2>1.1 Menghubungkan Collab<a class="headerlink" href="#menghubungkan-collab" title="Permalink to this heading">#</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">google.colab</span> <span class="kn">import</span> <span class="n">drive</span>
+<span class="n">drive</span><span class="o">.</span><span class="n">mount</span><span class="p">(</span><span class="s1">&#39;/content/gdrive&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output traceback highlight-ipythontb notranslate"><div class="highlight"><pre><span></span><span class="gt">---------------------------------------------------------------------------</span>
+<span class="ne">KeyboardInterrupt</span><span class="g g-Whitespace">                         </span>Traceback (most recent call last)
+<span class="nn">&lt;ipython-input-1-4996ee3d8d09&gt;</span> in <span class="ni">&lt;cell line: 2&gt;</span><span class="nt">()</span>
+<span class="g g-Whitespace">      </span><span class="mi">1</span> <span class="kn">from</span> <span class="nn">google.colab</span> <span class="kn">import</span> <span class="n">drive</span>
+<span class="ne">----&gt; </span><span class="mi">2</span> <span class="n">drive</span><span class="o">.</span><span class="n">mount</span><span class="p">(</span><span class="s1">&#39;/content/gdrive&#39;</span><span class="p">)</span>
+
+<span class="nn">/usr/local/lib/python3.10/dist-packages/google/colab/drive.py</span> in <span class="ni">mount</span><span class="nt">(mountpoint, force_remount, timeout_ms, readonly)</span>
+<span class="g g-Whitespace">    </span><span class="mi">101</span> <span class="k">def</span> <span class="nf">mount</span><span class="p">(</span><span class="n">mountpoint</span><span class="p">,</span> <span class="n">force_remount</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">timeout_ms</span><span class="o">=</span><span class="mi">120000</span><span class="p">,</span> <span class="n">readonly</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<span class="g g-Whitespace">    </span><span class="mi">102</span><span class="w">   </span><span class="sd">&quot;&quot;&quot;Mount your Google Drive at the specified mountpoint path.&quot;&quot;&quot;</span>
+<span class="ne">--&gt; </span><span class="mi">103</span>   <span class="k">return</span> <span class="n">_mount</span><span class="p">(</span>
+<span class="g g-Whitespace">    </span><span class="mi">104</span>       <span class="n">mountpoint</span><span class="p">,</span>
+<span class="g g-Whitespace">    </span><span class="mi">105</span>       <span class="n">force_remount</span><span class="o">=</span><span class="n">force_remount</span><span class="p">,</span>
+
+<span class="nn">/usr/local/lib/python3.10/dist-packages/google/colab/drive.py</span> in <span class="ni">_mount</span><span class="nt">(mountpoint, force_remount, timeout_ms, ephemeral, readonly)</span>
+<span class="g g-Whitespace">    </span><span class="mi">130</span>   <span class="p">)</span>
+<span class="g g-Whitespace">    </span><span class="mi">131</span>   <span class="k">if</span> <span class="n">ephemeral</span><span class="p">:</span>
+<span class="ne">--&gt; </span><span class="mi">132</span>     <span class="n">_message</span><span class="o">.</span><span class="n">blocking_request</span><span class="p">(</span>
+<span class="g g-Whitespace">    </span><span class="mi">133</span>         <span class="s1">&#39;request_auth&#39;</span><span class="p">,</span> <span class="n">request</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;authType&#39;</span><span class="p">:</span> <span class="s1">&#39;dfs_ephemeral&#39;</span><span class="p">},</span> <span class="n">timeout_sec</span><span class="o">=</span><span class="kc">None</span>
+<span class="g g-Whitespace">    </span><span class="mi">134</span>     <span class="p">)</span>
+
+<span class="nn">/usr/local/lib/python3.10/dist-packages/google/colab/_message.py</span> in <span class="ni">blocking_request</span><span class="nt">(request_type, request, timeout_sec, parent)</span>
+<span class="g g-Whitespace">    </span><span class="mi">174</span>       <span class="n">request_type</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="n">parent</span><span class="o">=</span><span class="n">parent</span><span class="p">,</span> <span class="n">expect_reply</span><span class="o">=</span><span class="kc">True</span>
+<span class="g g-Whitespace">    </span><span class="mi">175</span>   <span class="p">)</span>
+<span class="ne">--&gt; </span><span class="mi">176</span>   <span class="k">return</span> <span class="n">read_reply_from_input</span><span class="p">(</span><span class="n">request_id</span><span class="p">,</span> <span class="n">timeout_sec</span><span class="p">)</span>
+
+<span class="nn">/usr/local/lib/python3.10/dist-packages/google/colab/_message.py</span> in <span class="ni">read_reply_from_input</span><span class="nt">(message_id, timeout_sec)</span>
+<span class="g g-Whitespace">     </span><span class="mi">94</span>     <span class="n">reply</span> <span class="o">=</span> <span class="n">_read_next_input_message</span><span class="p">()</span>
+<span class="g g-Whitespace">     </span><span class="mi">95</span>     <span class="k">if</span> <span class="n">reply</span> <span class="o">==</span> <span class="n">_NOT_READY</span> <span class="ow">or</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">reply</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
+<span class="ne">---&gt; </span><span class="mi">96</span>       <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mf">0.025</span><span class="p">)</span>
+<span class="g g-Whitespace">     </span><span class="mi">97</span>       <span class="k">continue</span>
+<span class="g g-Whitespace">     </span><span class="mi">98</span>     <span class="k">if</span> <span class="p">(</span>
+
+<span class="ne">KeyboardInterrupt</span>: 
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="install-requirement-yolov7">
+<h2>1.2 Install Requirement YoloV7<a class="headerlink" href="#install-requirement-yolov7" title="Permalink to this heading">#</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%</span><span class="k">cd</span> /content/gdrive/MyDrive/DeepLearning/YoloV7
+<span class="o">!</span>git<span class="w"> </span>clone<span class="w"> </span>https://github.com/augmentedstartups/yolov7.git
+<span class="o">%</span><span class="k">cd</span> yolov7
+<span class="o">!</span>pip<span class="w"> </span>install<span class="w"> </span>-r<span class="w"> </span>requirements.txt
+<span class="o">!</span>pip<span class="w"> </span>install<span class="w"> </span>roboflow
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/content/gdrive/MyDrive/DeepLearning/YoloV7
+fatal: destination path &#39;yolov7&#39; already exists and is not an empty directory.
+/content/gdrive/MyDrive/DeepLearning/YoloV7/yolov7
+Requirement already satisfied: matplotlib&gt;=3.2.2 in /usr/local/lib/python3.10/dist-packages (from -r requirements.txt (line 4)) (3.7.1)
+Requirement already satisfied: numpy&gt;=1.18.5 in /usr/local/lib/python3.10/dist-packages (from -r requirements.txt (line 5)) (1.23.5)
+Requirement already satisfied: opencv-python&gt;=4.1.1 in /usr/local/lib/python3.10/dist-packages (from -r requirements.txt (line 6)) (4.8.0.76)
+Requirement already satisfied: Pillow&gt;=7.1.2 in /usr/local/lib/python3.10/dist-packages (from -r requirements.txt (line 7)) (9.4.0)
+Requirement already satisfied: PyYAML&gt;=5.3.1 in /usr/local/lib/python3.10/dist-packages (from -r requirements.txt (line 8)) (6.0.1)
+Requirement already satisfied: requests&gt;=2.23.0 in /usr/local/lib/python3.10/dist-packages (from -r requirements.txt (line 9)) (2.31.0)
+Requirement already satisfied: scipy&gt;=1.4.1 in /usr/local/lib/python3.10/dist-packages (from -r requirements.txt (line 10)) (1.11.3)
+Requirement already satisfied: torch!=1.12.0,&gt;=1.7.0 in /usr/local/lib/python3.10/dist-packages (from -r requirements.txt (line 11)) (2.0.1+cu118)
+Requirement already satisfied: torchvision!=0.13.0,&gt;=0.8.1 in /usr/local/lib/python3.10/dist-packages (from -r requirements.txt (line 12)) (0.15.2+cu118)
+Requirement already satisfied: tqdm&gt;=4.41.0 in /usr/local/lib/python3.10/dist-packages (from -r requirements.txt (line 13)) (4.66.1)
+Requirement already satisfied: protobuf&lt;4.21.3 in /usr/local/lib/python3.10/dist-packages (from -r requirements.txt (line 14)) (3.20.3)
+Requirement already satisfied: tensorboard&gt;=2.4.1 in /usr/local/lib/python3.10/dist-packages (from -r requirements.txt (line 17)) (2.13.0)
+Requirement already satisfied: pandas&gt;=1.1.4 in /usr/local/lib/python3.10/dist-packages (from -r requirements.txt (line 21)) (1.5.3)
+Requirement already satisfied: seaborn&gt;=0.11.0 in /usr/local/lib/python3.10/dist-packages (from -r requirements.txt (line 22)) (0.12.2)
+Requirement already satisfied: ipython in /usr/local/lib/python3.10/dist-packages (from -r requirements.txt (line 34)) (7.34.0)
+Requirement already satisfied: psutil in /usr/local/lib/python3.10/dist-packages (from -r requirements.txt (line 35)) (5.9.5)
+Collecting thop (from -r requirements.txt (line 36))
+  Downloading thop-0.1.1.post2209072238-py3-none-any.whl (15 kB)
+Requirement already satisfied: contourpy&gt;=1.0.1 in /usr/local/lib/python3.10/dist-packages (from matplotlib&gt;=3.2.2-&gt;-r requirements.txt (line 4)) (1.1.1)
+Requirement already satisfied: cycler&gt;=0.10 in /usr/local/lib/python3.10/dist-packages (from matplotlib&gt;=3.2.2-&gt;-r requirements.txt (line 4)) (0.12.1)
+Requirement already satisfied: fonttools&gt;=4.22.0 in /usr/local/lib/python3.10/dist-packages (from matplotlib&gt;=3.2.2-&gt;-r requirements.txt (line 4)) (4.43.1)
+Requirement already satisfied: kiwisolver&gt;=1.0.1 in /usr/local/lib/python3.10/dist-packages (from matplotlib&gt;=3.2.2-&gt;-r requirements.txt (line 4)) (1.4.5)
+Requirement already satisfied: packaging&gt;=20.0 in /usr/local/lib/python3.10/dist-packages (from matplotlib&gt;=3.2.2-&gt;-r requirements.txt (line 4)) (23.2)
+Requirement already satisfied: pyparsing&gt;=2.3.1 in /usr/local/lib/python3.10/dist-packages (from matplotlib&gt;=3.2.2-&gt;-r requirements.txt (line 4)) (3.1.1)
+Requirement already satisfied: python-dateutil&gt;=2.7 in /usr/local/lib/python3.10/dist-packages (from matplotlib&gt;=3.2.2-&gt;-r requirements.txt (line 4)) (2.8.2)
+Requirement already satisfied: charset-normalizer&lt;4,&gt;=2 in /usr/local/lib/python3.10/dist-packages (from requests&gt;=2.23.0-&gt;-r requirements.txt (line 9)) (3.3.0)
+Requirement already satisfied: idna&lt;4,&gt;=2.5 in /usr/local/lib/python3.10/dist-packages (from requests&gt;=2.23.0-&gt;-r requirements.txt (line 9)) (3.4)
+Requirement already satisfied: urllib3&lt;3,&gt;=1.21.1 in /usr/local/lib/python3.10/dist-packages (from requests&gt;=2.23.0-&gt;-r requirements.txt (line 9)) (2.0.6)
+Requirement already satisfied: certifi&gt;=2017.4.17 in /usr/local/lib/python3.10/dist-packages (from requests&gt;=2.23.0-&gt;-r requirements.txt (line 9)) (2023.7.22)
+Requirement already satisfied: filelock in /usr/local/lib/python3.10/dist-packages (from torch!=1.12.0,&gt;=1.7.0-&gt;-r requirements.txt (line 11)) (3.12.4)
+Requirement already satisfied: typing-extensions in /usr/local/lib/python3.10/dist-packages (from torch!=1.12.0,&gt;=1.7.0-&gt;-r requirements.txt (line 11)) (4.5.0)
+Requirement already satisfied: sympy in /usr/local/lib/python3.10/dist-packages (from torch!=1.12.0,&gt;=1.7.0-&gt;-r requirements.txt (line 11)) (1.12)
+Requirement already satisfied: networkx in /usr/local/lib/python3.10/dist-packages (from torch!=1.12.0,&gt;=1.7.0-&gt;-r requirements.txt (line 11)) (3.1)
+Requirement already satisfied: jinja2 in /usr/local/lib/python3.10/dist-packages (from torch!=1.12.0,&gt;=1.7.0-&gt;-r requirements.txt (line 11)) (3.1.2)
+Requirement already satisfied: triton==2.0.0 in /usr/local/lib/python3.10/dist-packages (from torch!=1.12.0,&gt;=1.7.0-&gt;-r requirements.txt (line 11)) (2.0.0)
+Requirement already satisfied: cmake in /usr/local/lib/python3.10/dist-packages (from triton==2.0.0-&gt;torch!=1.12.0,&gt;=1.7.0-&gt;-r requirements.txt (line 11)) (3.27.6)
+Requirement already satisfied: lit in /usr/local/lib/python3.10/dist-packages (from triton==2.0.0-&gt;torch!=1.12.0,&gt;=1.7.0-&gt;-r requirements.txt (line 11)) (17.0.2)
+Requirement already satisfied: absl-py&gt;=0.4 in /usr/local/lib/python3.10/dist-packages (from tensorboard&gt;=2.4.1-&gt;-r requirements.txt (line 17)) (1.4.0)
+Requirement already satisfied: grpcio&gt;=1.48.2 in /usr/local/lib/python3.10/dist-packages (from tensorboard&gt;=2.4.1-&gt;-r requirements.txt (line 17)) (1.59.0)
+Requirement already satisfied: google-auth&lt;3,&gt;=1.6.3 in /usr/local/lib/python3.10/dist-packages (from tensorboard&gt;=2.4.1-&gt;-r requirements.txt (line 17)) (2.17.3)
+Requirement already satisfied: google-auth-oauthlib&lt;1.1,&gt;=0.5 in /usr/local/lib/python3.10/dist-packages (from tensorboard&gt;=2.4.1-&gt;-r requirements.txt (line 17)) (1.0.0)
+Requirement already satisfied: markdown&gt;=2.6.8 in /usr/local/lib/python3.10/dist-packages (from tensorboard&gt;=2.4.1-&gt;-r requirements.txt (line 17)) (3.5)
+Requirement already satisfied: setuptools&gt;=41.0.0 in /usr/local/lib/python3.10/dist-packages (from tensorboard&gt;=2.4.1-&gt;-r requirements.txt (line 17)) (67.7.2)
+Requirement already satisfied: tensorboard-data-server&lt;0.8.0,&gt;=0.7.0 in /usr/local/lib/python3.10/dist-packages (from tensorboard&gt;=2.4.1-&gt;-r requirements.txt (line 17)) (0.7.1)
+Requirement already satisfied: werkzeug&gt;=1.0.1 in /usr/local/lib/python3.10/dist-packages (from tensorboard&gt;=2.4.1-&gt;-r requirements.txt (line 17)) (3.0.0)
+Requirement already satisfied: wheel&gt;=0.26 in /usr/local/lib/python3.10/dist-packages (from tensorboard&gt;=2.4.1-&gt;-r requirements.txt (line 17)) (0.41.2)
+Requirement already satisfied: pytz&gt;=2020.1 in /usr/local/lib/python3.10/dist-packages (from pandas&gt;=1.1.4-&gt;-r requirements.txt (line 21)) (2023.3.post1)
+Collecting jedi&gt;=0.16 (from ipython-&gt;-r requirements.txt (line 34))
+  Downloading jedi-0.19.1-py2.py3-none-any.whl (1.6 MB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ <span class=" -Color -Color-Green">1.6/1.6 MB</span> <span class=" -Color -Color-Red">24.5 MB/s</span> eta <span class=" -Color -Color-Cyan">0:00:00</span>
+?25hRequirement already satisfied: decorator in /usr/local/lib/python3.10/dist-packages (from ipython-&gt;-r requirements.txt (line 34)) (4.4.2)
+Requirement already satisfied: pickleshare in /usr/local/lib/python3.10/dist-packages (from ipython-&gt;-r requirements.txt (line 34)) (0.7.5)
+Requirement already satisfied: traitlets&gt;=4.2 in /usr/local/lib/python3.10/dist-packages (from ipython-&gt;-r requirements.txt (line 34)) (5.7.1)
+Requirement already satisfied: prompt-toolkit!=3.0.0,!=3.0.1,&lt;3.1.0,&gt;=2.0.0 in /usr/local/lib/python3.10/dist-packages (from ipython-&gt;-r requirements.txt (line 34)) (3.0.39)
+Requirement already satisfied: pygments in /usr/local/lib/python3.10/dist-packages (from ipython-&gt;-r requirements.txt (line 34)) (2.16.1)
+Requirement already satisfied: backcall in /usr/local/lib/python3.10/dist-packages (from ipython-&gt;-r requirements.txt (line 34)) (0.2.0)
+Requirement already satisfied: matplotlib-inline in /usr/local/lib/python3.10/dist-packages (from ipython-&gt;-r requirements.txt (line 34)) (0.1.6)
+Requirement already satisfied: pexpect&gt;4.3 in /usr/local/lib/python3.10/dist-packages (from ipython-&gt;-r requirements.txt (line 34)) (4.8.0)
+Requirement already satisfied: cachetools&lt;6.0,&gt;=2.0.0 in /usr/local/lib/python3.10/dist-packages (from google-auth&lt;3,&gt;=1.6.3-&gt;tensorboard&gt;=2.4.1-&gt;-r requirements.txt (line 17)) (5.3.1)
+Requirement already satisfied: pyasn1-modules&gt;=0.2.1 in /usr/local/lib/python3.10/dist-packages (from google-auth&lt;3,&gt;=1.6.3-&gt;tensorboard&gt;=2.4.1-&gt;-r requirements.txt (line 17)) (0.3.0)
+Requirement already satisfied: six&gt;=1.9.0 in /usr/local/lib/python3.10/dist-packages (from google-auth&lt;3,&gt;=1.6.3-&gt;tensorboard&gt;=2.4.1-&gt;-r requirements.txt (line 17)) (1.16.0)
+Requirement already satisfied: rsa&lt;5,&gt;=3.1.4 in /usr/local/lib/python3.10/dist-packages (from google-auth&lt;3,&gt;=1.6.3-&gt;tensorboard&gt;=2.4.1-&gt;-r requirements.txt (line 17)) (4.9)
+Requirement already satisfied: requests-oauthlib&gt;=0.7.0 in /usr/local/lib/python3.10/dist-packages (from google-auth-oauthlib&lt;1.1,&gt;=0.5-&gt;tensorboard&gt;=2.4.1-&gt;-r requirements.txt (line 17)) (1.3.1)
+Requirement already satisfied: parso&lt;0.9.0,&gt;=0.8.3 in /usr/local/lib/python3.10/dist-packages (from jedi&gt;=0.16-&gt;ipython-&gt;-r requirements.txt (line 34)) (0.8.3)
+Requirement already satisfied: ptyprocess&gt;=0.5 in /usr/local/lib/python3.10/dist-packages (from pexpect&gt;4.3-&gt;ipython-&gt;-r requirements.txt (line 34)) (0.7.0)
+Requirement already satisfied: wcwidth in /usr/local/lib/python3.10/dist-packages (from prompt-toolkit!=3.0.0,!=3.0.1,&lt;3.1.0,&gt;=2.0.0-&gt;ipython-&gt;-r requirements.txt (line 34)) (0.2.8)
+Requirement already satisfied: MarkupSafe&gt;=2.1.1 in /usr/local/lib/python3.10/dist-packages (from werkzeug&gt;=1.0.1-&gt;tensorboard&gt;=2.4.1-&gt;-r requirements.txt (line 17)) (2.1.3)
+Requirement already satisfied: mpmath&gt;=0.19 in /usr/local/lib/python3.10/dist-packages (from sympy-&gt;torch!=1.12.0,&gt;=1.7.0-&gt;-r requirements.txt (line 11)) (1.3.0)
+Requirement already satisfied: pyasn1&lt;0.6.0,&gt;=0.4.6 in /usr/local/lib/python3.10/dist-packages (from pyasn1-modules&gt;=0.2.1-&gt;google-auth&lt;3,&gt;=1.6.3-&gt;tensorboard&gt;=2.4.1-&gt;-r requirements.txt (line 17)) (0.5.0)
+Requirement already satisfied: oauthlib&gt;=3.0.0 in /usr/local/lib/python3.10/dist-packages (from requests-oauthlib&gt;=0.7.0-&gt;google-auth-oauthlib&lt;1.1,&gt;=0.5-&gt;tensorboard&gt;=2.4.1-&gt;-r requirements.txt (line 17)) (3.2.2)
+Installing collected packages: jedi, thop
+Successfully installed jedi-0.19.1 thop-0.1.1.post2209072238
+Collecting roboflow
+  Downloading roboflow-1.1.7-py3-none-any.whl (58 kB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ <span class=" -Color -Color-Green">58.8/58.8 kB</span> <span class=" -Color -Color-Red">1.9 MB/s</span> eta <span class=" -Color -Color-Cyan">0:00:00</span>
+?25hCollecting certifi==2022.12.7 (from roboflow)
+  Downloading certifi-2022.12.7-py3-none-any.whl (155 kB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ <span class=" -Color -Color-Green">155.3/155.3 kB</span> <span class=" -Color -Color-Red">9.6 MB/s</span> eta <span class=" -Color -Color-Cyan">0:00:00</span>
+?25hCollecting chardet==4.0.0 (from roboflow)
+  Downloading chardet-4.0.0-py2.py3-none-any.whl (178 kB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ <span class=" -Color -Color-Green">178.7/178.7 kB</span> <span class=" -Color -Color-Red">25.5 MB/s</span> eta <span class=" -Color -Color-Cyan">0:00:00</span>
+?25hCollecting cycler==0.10.0 (from roboflow)
+  Downloading cycler-0.10.0-py2.py3-none-any.whl (6.5 kB)
+Collecting idna==2.10 (from roboflow)
+  Downloading idna-2.10-py2.py3-none-any.whl (58 kB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ <span class=" -Color -Color-Green">58.8/58.8 kB</span> <span class=" -Color -Color-Red">8.2 MB/s</span> eta <span class=" -Color -Color-Cyan">0:00:00</span>
+?25hRequirement already satisfied: kiwisolver&gt;=1.3.1 in /usr/local/lib/python3.10/dist-packages (from roboflow) (1.4.5)
+Requirement already satisfied: matplotlib in /usr/local/lib/python3.10/dist-packages (from roboflow) (3.7.1)
+Requirement already satisfied: numpy&gt;=1.18.5 in /usr/local/lib/python3.10/dist-packages (from roboflow) (1.23.5)
+Collecting opencv-python-headless==4.8.0.74 (from roboflow)
+  Downloading opencv_python_headless-4.8.0.74-cp37-abi3-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (49.1 MB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ <span class=" -Color -Color-Green">49.1/49.1 MB</span> <span class=" -Color -Color-Red">12.2 MB/s</span> eta <span class=" -Color -Color-Cyan">0:00:00</span>
+?25hRequirement already satisfied: Pillow&gt;=7.1.2 in /usr/local/lib/python3.10/dist-packages (from roboflow) (9.4.0)
+Collecting pyparsing==2.4.7 (from roboflow)
+  Downloading pyparsing-2.4.7-py2.py3-none-any.whl (67 kB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ <span class=" -Color -Color-Green">67.8/67.8 kB</span> <span class=" -Color -Color-Red">9.5 MB/s</span> eta <span class=" -Color -Color-Cyan">0:00:00</span>
+?25hRequirement already satisfied: python-dateutil in /usr/local/lib/python3.10/dist-packages (from roboflow) (2.8.2)
+Collecting python-dotenv (from roboflow)
+  Downloading python_dotenv-1.0.0-py3-none-any.whl (19 kB)
+Requirement already satisfied: requests in /usr/local/lib/python3.10/dist-packages (from roboflow) (2.31.0)
+Requirement already satisfied: six in /usr/local/lib/python3.10/dist-packages (from roboflow) (1.16.0)
+Collecting supervision (from roboflow)
+  Downloading supervision-0.15.0-py3-none-any.whl (69 kB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ <span class=" -Color -Color-Green">69.0/69.0 kB</span> <span class=" -Color -Color-Red">10.0 MB/s</span> eta <span class=" -Color -Color-Cyan">0:00:00</span>
+?25hRequirement already satisfied: urllib3&gt;=1.26.6 in /usr/local/lib/python3.10/dist-packages (from roboflow) (2.0.6)
+Requirement already satisfied: tqdm&gt;=4.41.0 in /usr/local/lib/python3.10/dist-packages (from roboflow) (4.66.1)
+Requirement already satisfied: PyYAML&gt;=5.3.1 in /usr/local/lib/python3.10/dist-packages (from roboflow) (6.0.1)
+Collecting requests-toolbelt (from roboflow)
+  Downloading requests_toolbelt-1.0.0-py2.py3-none-any.whl (54 kB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ <span class=" -Color -Color-Green">54.5/54.5 kB</span> <span class=" -Color -Color-Red">7.5 MB/s</span> eta <span class=" -Color -Color-Cyan">0:00:00</span>
+?25hRequirement already satisfied: contourpy&gt;=1.0.1 in /usr/local/lib/python3.10/dist-packages (from matplotlib-&gt;roboflow) (1.1.1)
+Requirement already satisfied: fonttools&gt;=4.22.0 in /usr/local/lib/python3.10/dist-packages (from matplotlib-&gt;roboflow) (4.43.1)
+Requirement already satisfied: packaging&gt;=20.0 in /usr/local/lib/python3.10/dist-packages (from matplotlib-&gt;roboflow) (23.2)
+Requirement already satisfied: charset-normalizer&lt;4,&gt;=2 in /usr/local/lib/python3.10/dist-packages (from requests-&gt;roboflow) (3.3.0)
+Requirement already satisfied: scipy&lt;2.0.0,&gt;=1.9.0 in /usr/local/lib/python3.10/dist-packages (from supervision-&gt;roboflow) (1.11.3)
+Installing collected packages: python-dotenv, pyparsing, opencv-python-headless, idna, cycler, chardet, certifi, supervision, requests-toolbelt, roboflow
+  Attempting uninstall: pyparsing
+    Found existing installation: pyparsing 3.1.1
+    Uninstalling pyparsing-3.1.1:
+      Successfully uninstalled pyparsing-3.1.1
+  Attempting uninstall: opencv-python-headless
+    Found existing installation: opencv-python-headless 4.8.1.78
+    Uninstalling opencv-python-headless-4.8.1.78:
+      Successfully uninstalled opencv-python-headless-4.8.1.78
+  Attempting uninstall: idna
+    Found existing installation: idna 3.4
+    Uninstalling idna-3.4:
+      Successfully uninstalled idna-3.4
+  Attempting uninstall: cycler
+    Found existing installation: cycler 0.12.1
+    Uninstalling cycler-0.12.1:
+      Successfully uninstalled cycler-0.12.1
+  Attempting uninstall: chardet
+    Found existing installation: chardet 5.2.0
+    Uninstalling chardet-5.2.0:
+      Successfully uninstalled chardet-5.2.0
+  Attempting uninstall: certifi
+    Found existing installation: certifi 2023.7.22
+    Uninstalling certifi-2023.7.22:
+      Successfully uninstalled certifi-2023.7.22
+Successfully installed certifi-2022.12.7 chardet-4.0.0 cycler-0.10.0 idna-2.10 opencv-python-headless-4.8.0.74 pyparsing-2.4.7 python-dotenv-1.0.0 requests-toolbelt-1.0.0 roboflow-1.1.7 supervision-0.15.0
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="import-dataset">
+<h2>1.3 Import Dataset<a class="headerlink" href="#import-dataset" title="Permalink to this heading">#</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%</span><span class="k">cd</span> /content/gdrive/MyDrive/DeepLearning/YoloV7/yolov7
+
+<span class="c1">#### ROBOFLOW DATASET DOWNLOAD CODE #####</span>
+
+<span class="o">!</span>pip<span class="w"> </span>install<span class="w"> </span>roboflow
+
+<span class="kn">from</span> <span class="nn">roboflow</span> <span class="kn">import</span> <span class="n">Roboflow</span>
+<span class="n">rf</span> <span class="o">=</span> <span class="n">Roboflow</span><span class="p">(</span><span class="n">api_key</span><span class="o">=</span><span class="s2">&quot;Eg2mh8jzWX7NSGZC4Z2i&quot;</span><span class="p">)</span>
+<span class="c1"># project = rf.workspace(&quot;universitas-trunojoyo-madura-jm6fr&quot;).project(&quot;fruit-freshness-dzsvf&quot;)</span>
+<span class="c1"># dataset = project.version(3).download(&quot;yolov7&quot;)</span>
+<span class="n">project</span> <span class="o">=</span> <span class="n">rf</span><span class="o">.</span><span class="n">workspace</span><span class="p">(</span><span class="s2">&quot;universitas-trunojoyo-madura-jm6fr&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">project</span><span class="p">(</span><span class="s2">&quot;fruit-freshness-dzsvf&quot;</span><span class="p">)</span>
+<span class="n">dataset</span> <span class="o">=</span> <span class="n">project</span><span class="o">.</span><span class="n">version</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span><span class="o">.</span><span class="n">download</span><span class="p">(</span><span class="s2">&quot;yolov7&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/content/gdrive/MyDrive/DeepLearning/YoloV7/yolov7
+Requirement already satisfied: roboflow in /usr/local/lib/python3.10/dist-packages (1.1.7)
+Requirement already satisfied: certifi==2022.12.7 in /usr/local/lib/python3.10/dist-packages (from roboflow) (2022.12.7)
+Requirement already satisfied: chardet==4.0.0 in /usr/local/lib/python3.10/dist-packages (from roboflow) (4.0.0)
+Requirement already satisfied: cycler==0.10.0 in /usr/local/lib/python3.10/dist-packages (from roboflow) (0.10.0)
+Requirement already satisfied: idna==2.10 in /usr/local/lib/python3.10/dist-packages (from roboflow) (2.10)
+Requirement already satisfied: kiwisolver&gt;=1.3.1 in /usr/local/lib/python3.10/dist-packages (from roboflow) (1.4.5)
+Requirement already satisfied: matplotlib in /usr/local/lib/python3.10/dist-packages (from roboflow) (3.7.1)
+Requirement already satisfied: numpy&gt;=1.18.5 in /usr/local/lib/python3.10/dist-packages (from roboflow) (1.23.5)
+Requirement already satisfied: opencv-python-headless==4.8.0.74 in /usr/local/lib/python3.10/dist-packages (from roboflow) (4.8.0.74)
+Requirement already satisfied: Pillow&gt;=7.1.2 in /usr/local/lib/python3.10/dist-packages (from roboflow) (9.4.0)
+Requirement already satisfied: pyparsing==2.4.7 in /usr/local/lib/python3.10/dist-packages (from roboflow) (2.4.7)
+Requirement already satisfied: python-dateutil in /usr/local/lib/python3.10/dist-packages (from roboflow) (2.8.2)
+Requirement already satisfied: python-dotenv in /usr/local/lib/python3.10/dist-packages (from roboflow) (1.0.0)
+Requirement already satisfied: requests in /usr/local/lib/python3.10/dist-packages (from roboflow) (2.31.0)
+Requirement already satisfied: six in /usr/local/lib/python3.10/dist-packages (from roboflow) (1.16.0)
+Requirement already satisfied: supervision in /usr/local/lib/python3.10/dist-packages (from roboflow) (0.15.0)
+Requirement already satisfied: urllib3&gt;=1.26.6 in /usr/local/lib/python3.10/dist-packages (from roboflow) (2.0.6)
+Requirement already satisfied: tqdm&gt;=4.41.0 in /usr/local/lib/python3.10/dist-packages (from roboflow) (4.66.1)
+Requirement already satisfied: PyYAML&gt;=5.3.1 in /usr/local/lib/python3.10/dist-packages (from roboflow) (6.0.1)
+Requirement already satisfied: requests-toolbelt in /usr/local/lib/python3.10/dist-packages (from roboflow) (1.0.0)
+Requirement already satisfied: contourpy&gt;=1.0.1 in /usr/local/lib/python3.10/dist-packages (from matplotlib-&gt;roboflow) (1.1.1)
+Requirement already satisfied: fonttools&gt;=4.22.0 in /usr/local/lib/python3.10/dist-packages (from matplotlib-&gt;roboflow) (4.43.1)
+Requirement already satisfied: packaging&gt;=20.0 in /usr/local/lib/python3.10/dist-packages (from matplotlib-&gt;roboflow) (23.2)
+Requirement already satisfied: charset-normalizer&lt;4,&gt;=2 in /usr/local/lib/python3.10/dist-packages (from requests-&gt;roboflow) (3.3.0)
+Requirement already satisfied: scipy&lt;2.0.0,&gt;=1.9.0 in /usr/local/lib/python3.10/dist-packages (from supervision-&gt;roboflow) (1.11.3)
+loading Roboflow workspace...
+loading Roboflow project...
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading Dataset Version Zip in Fruit-Freshness-4 to yolov7pytorch:: 100%|██████████| 38198/38198 [00:04&lt;00:00, 8765.29it/s] 
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Extracting Dataset Version Zip to Fruit-Freshness-4 in yolov7pytorch:: 100%|██████████| 3004/3004 [00:17&lt;00:00, 175.65it/s]
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="download-weight-yolov7">
+<h2>1.4 Download Weight YoloV7<a class="headerlink" href="#download-weight-yolov7" title="Permalink to this heading">#</a></h2>
+</section>
+<section id="training-model-yolov7">
+<h2>1.5 Training Model YoloV7<a class="headerlink" href="#training-model-yolov7" title="Permalink to this heading">#</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">!</span>python<span class="w"> </span>train.py<span class="w"> </span>--workers<span class="w"> </span><span class="m">8</span><span class="w"> </span>--device<span class="w"> </span><span class="m">0</span><span class="w"> </span>--batch-size<span class="w"> </span><span class="m">8</span><span class="w"> </span>--img<span class="w"> </span><span class="m">640</span><span class="w"> </span><span class="m">640</span><span class="w"> </span>--cfg<span class="w"> </span>cfg/training/yolov7.yaml<span class="w"> </span>--epochs<span class="w"> </span><span class="m">50</span><span class="w"> </span>--data<span class="w"> </span>Fruit-Freshness-4/data.yaml<span class="w"> </span>--weights<span class="w"> </span><span class="s1">&#39;yolov7.pt&#39;</span><span class="w"> </span>--name<span class="w"> </span>yolov7-customFruit
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2023-10-15 19:22:19.088920: I tensorflow/core/platform/cpu_feature_guard.cc:182] This TensorFlow binary is optimized to use available CPU instructions in performance-critical operations.
+To enable the following instructions: AVX2 FMA, in other operations, rebuild TensorFlow with the appropriate compiler flags.
+2023-10-15 19:22:20.025938: W tensorflow/compiler/tf2tensorrt/utils/py_utils.cc:38] TF-TRT Warning: Could not find TensorRT
+YOLOR 🚀 v0.1-104-g941b94c torch 2.0.1+cu118 CUDA:0 (Tesla T4, 15101.8125MB)
+
+Namespace(weights=&#39;yolov7.pt&#39;, cfg=&#39;cfg/training/yolov7.yaml&#39;, data=&#39;Fruit-Freshness-4/data.yaml&#39;, hyp=&#39;data/hyp.scratch.p5.yaml&#39;, epochs=50, batch_size=8, img_size=[640, 640], rect=False, resume=False, nosave=False, notest=False, noautoanchor=False, evolve=False, bucket=&#39;&#39;, cache_images=False, image_weights=False, device=&#39;0&#39;, multi_scale=False, single_cls=False, adam=False, sync_bn=False, local_rank=-1, workers=8, project=&#39;runs/train&#39;, entity=None, name=&#39;yolov7-customFruit&#39;, exist_ok=False, quad=False, linear_lr=False, label_smoothing=0.0, upload_dataset=False, bbox_interval=-1, save_period=-1, artifact_alias=&#39;latest&#39;, freeze=[0], world_size=1, global_rank=-1, save_dir=&#39;runs/train/yolov7-customFruit7&#39;, total_batch_size=8)
+<span class=" -Color -Color-Bold -Color-Bold-Blue">tensorboard: </span>Start with &#39;tensorboard --logdir runs/train&#39;, view at http://localhost:6006/
+<span class=" -Color -Color-Bold -Color-Bold-Blue">hyperparameters: </span>lr0=0.01, lrf=0.1, momentum=0.937, weight_decay=0.0005, warmup_epochs=3.0, warmup_momentum=0.8, warmup_bias_lr=0.1, box=0.05, cls=0.3, cls_pw=1.0, obj=0.7, obj_pw=1.0, iou_t=0.2, anchor_t=4.0, fl_gamma=0.0, hsv_h=0.015, hsv_s=0.7, hsv_v=0.4, degrees=0.0, translate=0.2, scale=0.9, shear=0.0, perspective=0.0, flipud=0.0, fliplr=0.5, mosaic=1.0, mixup=0.15, copy_paste=0.0, paste_in=0.15, loss_ota=1
+<span class=" -Color -Color-Bold -Color-Bold-Blue">wandb: </span>Install Weights &amp; Biases for YOLOR logging with &#39;pip install wandb&#39; (recommended)
+Overriding model.yaml nc=80 with nc=6
+
+                 from  n    params  module                                  arguments                     
+  0                -1  1       928  models.common.Conv                      [3, 32, 3, 1]                 
+  1                -1  1     18560  models.common.Conv                      [32, 64, 3, 2]                
+  2                -1  1     36992  models.common.Conv                      [64, 64, 3, 1]                
+  3                -1  1     73984  models.common.Conv                      [64, 128, 3, 2]               
+  4                -1  1      8320  models.common.Conv                      [128, 64, 1, 1]               
+  5                -2  1      8320  models.common.Conv                      [128, 64, 1, 1]               
+  6                -1  1     36992  models.common.Conv                      [64, 64, 3, 1]                
+  7                -1  1     36992  models.common.Conv                      [64, 64, 3, 1]                
+  8                -1  1     36992  models.common.Conv                      [64, 64, 3, 1]                
+  9                -1  1     36992  models.common.Conv                      [64, 64, 3, 1]                
+ 10  [-1, -3, -5, -6]  1         0  models.common.Concat                    [1]                           
+ 11                -1  1     66048  models.common.Conv                      [256, 256, 1, 1]              
+ 12                -1  1         0  models.common.MP                        []                            
+ 13                -1  1     33024  models.common.Conv                      [256, 128, 1, 1]              
+ 14                -3  1     33024  models.common.Conv                      [256, 128, 1, 1]              
+ 15                -1  1    147712  models.common.Conv                      [128, 128, 3, 2]              
+ 16          [-1, -3]  1         0  models.common.Concat                    [1]                           
+ 17                -1  1     33024  models.common.Conv                      [256, 128, 1, 1]              
+ 18                -2  1     33024  models.common.Conv                      [256, 128, 1, 1]              
+ 19                -1  1    147712  models.common.Conv                      [128, 128, 3, 1]              
+ 20                -1  1    147712  models.common.Conv                      [128, 128, 3, 1]              
+ 21                -1  1    147712  models.common.Conv                      [128, 128, 3, 1]              
+ 22                -1  1    147712  models.common.Conv                      [128, 128, 3, 1]              
+ 23  [-1, -3, -5, -6]  1         0  models.common.Concat                    [1]                           
+ 24                -1  1    263168  models.common.Conv                      [512, 512, 1, 1]              
+ 25                -1  1         0  models.common.MP                        []                            
+ 26                -1  1    131584  models.common.Conv                      [512, 256, 1, 1]              
+ 27                -3  1    131584  models.common.Conv                      [512, 256, 1, 1]              
+ 28                -1  1    590336  models.common.Conv                      [256, 256, 3, 2]              
+ 29          [-1, -3]  1         0  models.common.Concat                    [1]                           
+ 30                -1  1    131584  models.common.Conv                      [512, 256, 1, 1]              
+ 31                -2  1    131584  models.common.Conv                      [512, 256, 1, 1]              
+ 32                -1  1    590336  models.common.Conv                      [256, 256, 3, 1]              
+ 33                -1  1    590336  models.common.Conv                      [256, 256, 3, 1]              
+ 34                -1  1    590336  models.common.Conv                      [256, 256, 3, 1]              
+ 35                -1  1    590336  models.common.Conv                      [256, 256, 3, 1]              
+ 36  [-1, -3, -5, -6]  1         0  models.common.Concat                    [1]                           
+ 37                -1  1   1050624  models.common.Conv                      [1024, 1024, 1, 1]            
+ 38                -1  1         0  models.common.MP                        []                            
+ 39                -1  1    525312  models.common.Conv                      [1024, 512, 1, 1]             
+ 40                -3  1    525312  models.common.Conv                      [1024, 512, 1, 1]             
+ 41                -1  1   2360320  models.common.Conv                      [512, 512, 3, 2]              
+ 42          [-1, -3]  1         0  models.common.Concat                    [1]                           
+ 43                -1  1    262656  models.common.Conv                      [1024, 256, 1, 1]             
+ 44                -2  1    262656  models.common.Conv                      [1024, 256, 1, 1]             
+ 45                -1  1    590336  models.common.Conv                      [256, 256, 3, 1]              
+ 46                -1  1    590336  models.common.Conv                      [256, 256, 3, 1]              
+ 47                -1  1    590336  models.common.Conv                      [256, 256, 3, 1]              
+ 48                -1  1    590336  models.common.Conv                      [256, 256, 3, 1]              
+ 49  [-1, -3, -5, -6]  1         0  models.common.Concat                    [1]                           
+ 50                -1  1   1050624  models.common.Conv                      [1024, 1024, 1, 1]            
+ 51                -1  1   7609344  models.common.SPPCSPC                   [1024, 512, 1]                
+ 52                -1  1    131584  models.common.Conv                      [512, 256, 1, 1]              
+ 53                -1  1         0  torch.nn.modules.upsampling.Upsample    [None, 2, &#39;nearest&#39;]          
+ 54                37  1    262656  models.common.Conv                      [1024, 256, 1, 1]             
+ 55          [-1, -2]  1         0  models.common.Concat                    [1]                           
+ 56                -1  1    131584  models.common.Conv                      [512, 256, 1, 1]              
+ 57                -2  1    131584  models.common.Conv                      [512, 256, 1, 1]              
+ 58                -1  1    295168  models.common.Conv                      [256, 128, 3, 1]              
+ 59                -1  1    147712  models.common.Conv                      [128, 128, 3, 1]              
+ 60                -1  1    147712  models.common.Conv                      [128, 128, 3, 1]              
+ 61                -1  1    147712  models.common.Conv                      [128, 128, 3, 1]              
+ 62[-1, -2, -3, -4, -5, -6]  1         0  models.common.Concat                    [1]                           
+ 63                -1  1    262656  models.common.Conv                      [1024, 256, 1, 1]             
+ 64                -1  1     33024  models.common.Conv                      [256, 128, 1, 1]              
+ 65                -1  1         0  torch.nn.modules.upsampling.Upsample    [None, 2, &#39;nearest&#39;]          
+ 66                24  1     65792  models.common.Conv                      [512, 128, 1, 1]              
+ 67          [-1, -2]  1         0  models.common.Concat                    [1]                           
+ 68                -1  1     33024  models.common.Conv                      [256, 128, 1, 1]              
+ 69                -2  1     33024  models.common.Conv                      [256, 128, 1, 1]              
+ 70                -1  1     73856  models.common.Conv                      [128, 64, 3, 1]               
+ 71                -1  1     36992  models.common.Conv                      [64, 64, 3, 1]                
+ 72                -1  1     36992  models.common.Conv                      [64, 64, 3, 1]                
+ 73                -1  1     36992  models.common.Conv                      [64, 64, 3, 1]                
+ 74[-1, -2, -3, -4, -5, -6]  1         0  models.common.Concat                    [1]                           
+ 75                -1  1     65792  models.common.Conv                      [512, 128, 1, 1]              
+ 76                -1  1         0  models.common.MP                        []                            
+ 77                -1  1     16640  models.common.Conv                      [128, 128, 1, 1]              
+ 78                -3  1     16640  models.common.Conv                      [128, 128, 1, 1]              
+ 79                -1  1    147712  models.common.Conv                      [128, 128, 3, 2]              
+ 80      [-1, -3, 63]  1         0  models.common.Concat                    [1]                           
+ 81                -1  1    131584  models.common.Conv                      [512, 256, 1, 1]              
+ 82                -2  1    131584  models.common.Conv                      [512, 256, 1, 1]              
+ 83                -1  1    295168  models.common.Conv                      [256, 128, 3, 1]              
+ 84                -1  1    147712  models.common.Conv                      [128, 128, 3, 1]              
+ 85                -1  1    147712  models.common.Conv                      [128, 128, 3, 1]              
+ 86                -1  1    147712  models.common.Conv                      [128, 128, 3, 1]              
+ 87[-1, -2, -3, -4, -5, -6]  1         0  models.common.Concat                    [1]                           
+ 88                -1  1    262656  models.common.Conv                      [1024, 256, 1, 1]             
+ 89                -1  1         0  models.common.MP                        []                            
+ 90                -1  1     66048  models.common.Conv                      [256, 256, 1, 1]              
+ 91                -3  1     66048  models.common.Conv                      [256, 256, 1, 1]              
+ 92                -1  1    590336  models.common.Conv                      [256, 256, 3, 2]              
+ 93      [-1, -3, 51]  1         0  models.common.Concat                    [1]                           
+ 94                -1  1    525312  models.common.Conv                      [1024, 512, 1, 1]             
+ 95                -2  1    525312  models.common.Conv                      [1024, 512, 1, 1]             
+ 96                -1  1   1180160  models.common.Conv                      [512, 256, 3, 1]              
+ 97                -1  1    590336  models.common.Conv                      [256, 256, 3, 1]              
+ 98                -1  1    590336  models.common.Conv                      [256, 256, 3, 1]              
+ 99                -1  1    590336  models.common.Conv                      [256, 256, 3, 1]              
+100[-1, -2, -3, -4, -5, -6]  1         0  models.common.Concat                    [1]                           
+101                -1  1   1049600  models.common.Conv                      [2048, 512, 1, 1]             
+102                75  1    328704  models.common.RepConv                   [128, 256, 3, 1]              
+103                88  1   1312768  models.common.RepConv                   [256, 512, 3, 1]              
+104               101  1   5246976  models.common.RepConv                   [512, 1024, 3, 1]             
+105   [102, 103, 104]  1     61126  models.yolo.IDetect                     [6, [[12, 16, 19, 36, 40, 28], [36, 75, 76, 55, 72, 146], [142, 110, 192, 243, 459, 401]], [256, 512, 1024]]
+Model Summary: 415 layers, 37223526 parameters, 37223526 gradients
+
+Transferred 552/566 items from yolov7.pt
+Scaled weight_decay = 0.0005
+Optimizer groups: 95 .bias, 95 conv.weight, 98 other
+<span class=" -Color -Color-Bold -Color-Bold-Blue">train: </span>Scanning &#39;Fruit-Freshness-4/train/labels.cache&#39; images and labels... 1307 found, 0 missing, 0 empty, 0 corrupted: 100% 1307/1307 [00:00&lt;?, ?it/s]
+<span class=" -Color -Color-Bold -Color-Bold-Blue">val: </span>Scanning &#39;Fruit-Freshness-4/valid/labels.cache&#39; images and labels... 126 found, 0 missing, 0 empty, 0 corrupted: 100% 126/126 [00:00&lt;?, ?it/s]
+
+<span class=" -Color -Color-Bold -Color-Bold-Blue">autoanchor: </span>Analyzing anchors... anchors/target = 2.04, Best Possible Recall (BPR) = 1.0000
+Image sizes 640 train, 640 test
+Using 2 dataloader workers
+Logging results to runs/train/yolov7-customFruit7
+Starting training for 50 epochs...
+
+     Epoch   gpu_mem       box       obj       cls     total    labels  img_size
+      0/49     1.12G   0.04931    0.4198   0.03382    0.5029        11       640: 100% 164/164 [04:22&lt;00:00,  1.60s/it]
+               Class      Images      Labels           P           R      mAP@.5  mAP@.5:.95:   0% 0/8 [00:00&lt;?, ?it/s]/usr/local/lib/python3.10/dist-packages/torch/functional.py:504: UserWarning: torch.meshgrid: in an upcoming release, it will be required to pass the indexing argument. (Triggered internally at ../aten/src/ATen/native/TensorShape.cpp:3483.)
+  return _VF.meshgrid(tensors, **kwargs)  # type: ignore[attr-defined]
+               Class      Images      Labels           P           R      mAP@.5  mAP@.5:.95: 100% 8/8 [00:20&lt;00:00,  2.59s/it]
+                 all         126         142      0.0242       0.145      0.0141     0.00326
+
+     Epoch   gpu_mem       box       obj       cls     total    labels  img_size
+      1/49     7.41G   0.04114   0.01093   0.03482   0.08689        11       640: 100% 164/164 [01:31&lt;00:00,  1.79it/s]
+               Class      Images      Labels           P           R      mAP@.5  mAP@.5:.95: 100% 8/8 [00:03&lt;00:00,  2.33it/s]
+                 all         126         142       0.157       0.686        0.21       0.138
+
+     Epoch   gpu_mem       box       obj       cls     total    labels  img_size
+      2/49     9.03G     0.029   0.00885    0.0305   0.06835        10       640: 100% 164/164 [01:27&lt;00:00,  1.88it/s]
+               Class      Images      Labels           P           R      mAP@.5  mAP@.5:.95: 100% 8/8 [00:02&lt;00:00,  3.09it/s]
+                 all         126         142       0.165       0.886       0.238       0.179
+
+     Epoch   gpu_mem       box       obj       cls     total    labels  img_size
+      3/49     9.03G   0.02815  0.007836   0.02657   0.06256        10       640: 100% 164/164 [01:29&lt;00:00,  1.84it/s]
+               Class      Images      Labels           P           R      mAP@.5  mAP@.5:.95: 100% 8/8 [00:02&lt;00:00,  3.13it/s]
+                 all         126         142       0.152       0.941       0.208       0.137
+
+     Epoch   gpu_mem       box       obj       cls     total    labels  img_size
+      4/49     9.03G   0.02672  0.007667   0.02392   0.05831         9       640: 100% 164/164 [01:26&lt;00:00,  1.89it/s]
+               Class      Images      Labels           P           R      mAP@.5  mAP@.5:.95: 100% 8/8 [00:02&lt;00:00,  3.02it/s]
+                 all         126         142        0.18       0.791       0.205       0.142
+
+     Epoch   gpu_mem       box       obj       cls     total    labels  img_size
+      5/49     9.03G   0.02495  0.008122   0.02309   0.05616         8       640: 100% 164/164 [01:26&lt;00:00,  1.90it/s]
+               Class      Images      Labels           P           R      mAP@.5  mAP@.5:.95: 100% 8/8 [00:03&lt;00:00,  2.09it/s]
+                 all         126         142       0.181       0.691       0.285       0.184
+
+     Epoch   gpu_mem       box       obj       cls     total    labels  img_size
+      6/49     9.03G   0.02491  0.008838   0.02281   0.05656         6       640: 100% 164/164 [01:28&lt;00:00,  1.85it/s]
+               Class      Images      Labels           P           R      mAP@.5  mAP@.5:.95: 100% 8/8 [00:02&lt;00:00,  3.18it/s]
+                 all         126         142       0.174       0.697       0.233       0.163
+
+     Epoch   gpu_mem       box       obj       cls     total    labels  img_size
+      7/49     9.03G   0.02112   0.00869   0.02108   0.05089        10       640: 100% 164/164 [01:28&lt;00:00,  1.86it/s]
+               Class      Images      Labels           P           R      mAP@.5  mAP@.5:.95: 100% 8/8 [00:02&lt;00:00,  3.28it/s]
+                 all         126         142       0.263       0.592       0.352       0.235
+
+     Epoch   gpu_mem       box       obj       cls     total    labels  img_size
+      8/49     9.03G   0.01939  0.009018    0.0197    0.0481        15       640: 100% 164/164 [01:28&lt;00:00,  1.85it/s]
+               Class      Images      Labels           P           R      mAP@.5  mAP@.5:.95: 100% 8/8 [00:02&lt;00:00,  3.41it/s]
+                 all         126         142       0.222       0.797       0.331       0.232
+
+     Epoch   gpu_mem       box       obj       cls     total    labels  img_size
+      9/49     9.03G   0.01964  0.009298   0.01917   0.04811         8       640: 100% 164/164 [01:27&lt;00:00,  1.87it/s]
+               Class      Images      Labels           P           R      mAP@.5  mAP@.5:.95: 100% 8/8 [00:02&lt;00:00,  3.27it/s]
+                 all         126         142       0.256       0.813       0.392       0.264
+
+     Epoch   gpu_mem       box       obj       cls     total    labels  img_size
+     10/49     9.03G   0.01785  0.008934   0.01801   0.04479        11       640: 100% 164/164 [01:28&lt;00:00,  1.86it/s]
+               Class      Images      Labels           P           R      mAP@.5  mAP@.5:.95: 100% 8/8 [00:02&lt;00:00,  3.24it/s]
+                 all         126         142       0.261       0.792        0.35       0.222
+
+     Epoch   gpu_mem       box       obj       cls     total    labels  img_size
+     11/49     9.03G   0.01883  0.008773   0.01808   0.04568        10       640: 100% 164/164 [01:27&lt;00:00,  1.87it/s]
+               Class      Images      Labels           P           R      mAP@.5  mAP@.5:.95: 100% 8/8 [00:02&lt;00:00,  3.20it/s]
+                 all         126         142       0.292       0.825       0.411       0.283
+
+     Epoch   gpu_mem       box       obj       cls     total    labels  img_size
+     12/49     9.03G   0.01856  0.008862   0.01745   0.04488         9       640: 100% 164/164 [01:29&lt;00:00,  1.84it/s]
+               Class      Images      Labels           P           R      mAP@.5  mAP@.5:.95: 100% 8/8 [00:03&lt;00:00,  2.52it/s]
+                 all         126         142       0.331        0.79       0.469       0.309
+
+     Epoch   gpu_mem       box       obj       cls     total    labels  img_size
+     13/49     9.03G   0.01762  0.008828   0.01664   0.04309        10       640: 100% 164/164 [01:28&lt;00:00,  1.84it/s]
+               Class      Images      Labels           P           R      mAP@.5  mAP@.5:.95: 100% 8/8 [00:02&lt;00:00,  3.14it/s]
+                 all         126         142       0.411       0.867       0.555       0.385
+
+     Epoch   gpu_mem       box       obj       cls     total    labels  img_size
+     14/49     9.03G   0.01714  0.008653   0.01619   0.04198        14       640: 100% 164/164 [01:27&lt;00:00,  1.87it/s]
+               Class      Images      Labels           P           R      mAP@.5  mAP@.5:.95: 100% 8/8 [00:03&lt;00:00,  2.35it/s]
+                 all         126         142       0.406       0.853        0.53       0.336
+
+     Epoch   gpu_mem       box       obj       cls     total    labels  img_size
+     15/49     9.03G   0.01847  0.008714    0.0163   0.04349        11       640: 100% 164/164 [01:27&lt;00:00,  1.88it/s]
+               Class      Images      Labels           P           R      mAP@.5  mAP@.5:.95: 100% 8/8 [00:02&lt;00:00,  3.11it/s]
+                 all         126         142       0.424       0.802       0.561       0.388
+
+     Epoch   gpu_mem       box       obj       cls     total    labels  img_size
+     16/49     9.03G   0.01788  0.008565   0.01664   0.04308         8       640: 100% 164/164 [01:27&lt;00:00,  1.87it/s]
+               Class      Images      Labels           P           R      mAP@.5  mAP@.5:.95: 100% 8/8 [00:03&lt;00:00,  2.38it/s]
+                 all         126         142       0.417       0.829       0.586       0.433
+
+     Epoch   gpu_mem       box       obj       cls     total    labels  img_size
+     17/49     9.03G    0.0175  0.008305   0.01573   0.04154         8       640: 100% 164/164 [01:27&lt;00:00,  1.87it/s]
+               Class      Images      Labels           P           R      mAP@.5  mAP@.5:.95: 100% 8/8 [00:02&lt;00:00,  2.96it/s]
+                 all         126         142       0.416       0.658       0.547       0.387
+
+     Epoch   gpu_mem       box       obj       cls     total    labels  img_size
+     18/49     9.03G   0.01616  0.008438   0.01535   0.03995        14       640: 100% 164/164 [01:26&lt;00:00,  1.90it/s]
+               Class      Images      Labels           P           R      mAP@.5  mAP@.5:.95: 100% 8/8 [00:02&lt;00:00,  3.07it/s]
+                 all         126         142       0.506       0.855       0.655       0.457
+
+     Epoch   gpu_mem       box       obj       cls     total    labels  img_size
+     19/49     9.03G   0.01544  0.008184   0.01473   0.03835         8       640: 100% 164/164 [01:28&lt;00:00,  1.86it/s]
+               Class      Images      Labels           P           R      mAP@.5  mAP@.5:.95: 100% 8/8 [00:03&lt;00:00,  2.10it/s]
+                 all         126         142       0.551       0.868       0.656       0.454
+
+     Epoch   gpu_mem       box       obj       cls     total    labels  img_size
+     20/49     9.03G   0.01628   0.00824   0.01473   0.03924        10       640: 100% 164/164 [01:27&lt;00:00,  1.88it/s]
+               Class      Images      Labels           P           R      mAP@.5  mAP@.5:.95: 100% 8/8 [00:02&lt;00:00,  3.02it/s]
+                 all         126         142       0.635       0.696       0.686       0.533
+
+     Epoch   gpu_mem       box       obj       cls     total    labels  img_size
+     21/49     9.03G    0.0158  0.008324   0.01461   0.03873        19       640: 100% 164/164 [01:29&lt;00:00,  1.84it/s]
+               Class      Images      Labels           P           R      mAP@.5  mAP@.5:.95: 100% 8/8 [00:02&lt;00:00,  3.19it/s]
+                 all         126         142       0.681       0.755       0.728       0.537
+
+     Epoch   gpu_mem       box       obj       cls     total    labels  img_size
+     22/49     9.03G   0.01454  0.007902   0.01399   0.03643         7       640: 100% 164/164 [01:26&lt;00:00,  1.90it/s]
+               Class      Images      Labels           P           R      mAP@.5  mAP@.5:.95: 100% 8/8 [00:02&lt;00:00,  3.06it/s]
+                 all         126         142       0.612       0.781       0.655       0.468
+
+     Epoch   gpu_mem       box       obj       cls     total    labels  img_size
+     23/49     9.03G   0.01402   0.00793   0.01367   0.03563        12       640: 100% 164/164 [01:28&lt;00:00,  1.86it/s]
+               Class      Images      Labels           P           R      mAP@.5  mAP@.5:.95: 100% 8/8 [00:02&lt;00:00,  3.32it/s]
+                 all         126         142        0.71       0.645       0.727       0.571
+
+     Epoch   gpu_mem       box       obj       cls     total    labels  img_size
+     24/49     9.03G   0.01516  0.007531   0.01352    0.0362        10       640: 100% 164/164 [01:26&lt;00:00,  1.90it/s]
+               Class      Images      Labels           P           R      mAP@.5  mAP@.5:.95: 100% 8/8 [00:02&lt;00:00,  2.85it/s]
+                 all         126         142       0.716       0.729       0.776       0.624
+
+     Epoch   gpu_mem       box       obj       cls     total    labels  img_size
+     25/49     9.03G   0.01515   0.00765   0.01337   0.03617         6       640: 100% 164/164 [01:30&lt;00:00,  1.80it/s]
+               Class      Images      Labels           P           R      mAP@.5  mAP@.5:.95: 100% 8/8 [00:03&lt;00:00,  2.16it/s]
+                 all         126         142       0.591       0.804       0.673       0.506
+
+     Epoch   gpu_mem       box       obj       cls     total    labels  img_size
+     26/49     9.03G   0.01446  0.007742   0.01339    0.0356        12       640: 100% 164/164 [01:29&lt;00:00,  1.84it/s]
+               Class      Images      Labels           P           R      mAP@.5  mAP@.5:.95: 100% 8/8 [00:02&lt;00:00,  2.89it/s]
+                 all         126         142       0.818       0.756       0.836       0.647
+
+     Epoch   gpu_mem       box       obj       cls     total    labels  img_size
+     27/49     9.03G   0.01441  0.007454   0.01291   0.03477         8       640: 100% 164/164 [01:28&lt;00:00,  1.85it/s]
+               Class      Images      Labels           P           R      mAP@.5  mAP@.5:.95: 100% 8/8 [00:02&lt;00:00,  3.04it/s]
+                 all         126         142       0.749       0.792       0.842       0.657
+
+     Epoch   gpu_mem       box       obj       cls     total    labels  img_size
+     28/49     9.03G   0.01575  0.007704   0.01292   0.03638         6       640: 100% 164/164 [01:29&lt;00:00,  1.82it/s]
+               Class      Images      Labels           P           R      mAP@.5  mAP@.5:.95: 100% 8/8 [00:03&lt;00:00,  2.50it/s]
+                 all         126         142       0.791       0.801       0.838       0.651
+
+     Epoch   gpu_mem       box       obj       cls     total    labels  img_size
+     29/49     9.03G   0.01502  0.007564   0.01244   0.03503        12       640: 100% 164/164 [01:28&lt;00:00,  1.86it/s]
+               Class      Images      Labels           P           R      mAP@.5  mAP@.5:.95: 100% 8/8 [00:02&lt;00:00,  3.20it/s]
+                 all         126         142       0.676        0.86       0.815       0.622
+
+     Epoch   gpu_mem       box       obj       cls     total    labels  img_size
+     30/49     9.03G   0.01355  0.007465   0.01163   0.03264        13       640: 100% 164/164 [01:28&lt;00:00,  1.85it/s]
+               Class      Images      Labels           P           R      mAP@.5  mAP@.5:.95: 100% 8/8 [00:02&lt;00:00,  3.01it/s]
+                 all         126         142       0.789       0.844       0.878       0.694
+
+     Epoch   gpu_mem       box       obj       cls     total    labels  img_size
+     31/49     9.03G   0.01273  0.007287   0.01137   0.03138         9       640: 100% 164/164 [01:27&lt;00:00,  1.88it/s]
+               Class      Images      Labels           P           R      mAP@.5  mAP@.5:.95: 100% 8/8 [00:02&lt;00:00,  3.29it/s]
+                 all         126         142       0.772       0.844        0.86       0.673
+
+     Epoch   gpu_mem       box       obj       cls     total    labels  img_size
+     32/49     9.03G   0.01358  0.007054   0.01125   0.03188         6       640: 100% 164/164 [01:26&lt;00:00,  1.89it/s]
+               Class      Images      Labels           P           R      mAP@.5  mAP@.5:.95: 100% 8/8 [00:02&lt;00:00,  3.09it/s]
+                 all         126         142       0.847       0.811       0.891       0.708
+
+     Epoch   gpu_mem       box       obj       cls     total    labels  img_size
+     33/49     9.03G   0.01248  0.007203   0.01101   0.03069         8       640: 100% 164/164 [01:28&lt;00:00,  1.86it/s]
+               Class      Images      Labels           P           R      mAP@.5  mAP@.5:.95: 100% 8/8 [00:02&lt;00:00,  2.77it/s]
+                 all         126         142       0.871       0.732       0.869       0.678
+
+     Epoch   gpu_mem       box       obj       cls     total    labels  img_size
+     34/49     9.03G   0.01304  0.006839   0.01075   0.03062        14       640: 100% 164/164 [01:26&lt;00:00,  1.89it/s]
+               Class      Images      Labels           P           R      mAP@.5  mAP@.5:.95: 100% 8/8 [00:02&lt;00:00,  3.24it/s]
+                 all         126         142       0.823       0.906       0.898       0.699
+
+     Epoch   gpu_mem       box       obj       cls     total    labels  img_size
+     35/49     9.03G   0.01401  0.006879   0.01088   0.03177        10       640: 100% 164/164 [01:28&lt;00:00,  1.86it/s]
+               Class      Images      Labels           P           R      mAP@.5  mAP@.5:.95: 100% 8/8 [00:02&lt;00:00,  2.73it/s]
+                 all         126         142        0.85       0.838       0.902         0.7
+
+     Epoch   gpu_mem       box       obj       cls     total    labels  img_size
+     36/49     9.03G   0.01401  0.006922   0.01088   0.03181         6       640: 100% 164/164 [01:27&lt;00:00,  1.88it/s]
+               Class      Images      Labels           P           R      mAP@.5  mAP@.5:.95: 100% 8/8 [00:03&lt;00:00,  2.63it/s]
+                 all         126         142       0.815       0.773       0.875       0.674
+
+     Epoch   gpu_mem       box       obj       cls     total    labels  img_size
+     37/49     9.03G   0.01263  0.007099   0.01047   0.03019         7       640: 100% 164/164 [01:27&lt;00:00,  1.87it/s]
+               Class      Images      Labels           P           R      mAP@.5  mAP@.5:.95: 100% 8/8 [00:02&lt;00:00,  3.13it/s]
+                 all         126         142       0.876       0.865       0.924       0.734
+
+     Epoch   gpu_mem       box       obj       cls     total    labels  img_size
+     38/49     9.03G   0.01101  0.006667  0.009839   0.02752        10       640: 100% 164/164 [01:26&lt;00:00,  1.90it/s]
+               Class      Images      Labels           P           R      mAP@.5  mAP@.5:.95: 100% 8/8 [00:02&lt;00:00,  3.26it/s]
+                 all         126         142       0.829        0.86        0.91        0.73
+
+     Epoch   gpu_mem       box       obj       cls     total    labels  img_size
+     39/49     9.03G    0.0108  0.006677  0.009486   0.02696        16       640: 100% 164/164 [01:25&lt;00:00,  1.92it/s]
+               Class      Images      Labels           P           R      mAP@.5  mAP@.5:.95: 100% 8/8 [00:03&lt;00:00,  2.12it/s]
+                 all         126         142       0.854       0.832       0.894       0.702
+
+     Epoch   gpu_mem       box       obj       cls     total    labels  img_size
+     40/49     9.03G   0.01271  0.006855   0.01017   0.02973         7       640: 100% 164/164 [01:26&lt;00:00,  1.89it/s]
+               Class      Images      Labels           P           R      mAP@.5  mAP@.5:.95: 100% 8/8 [00:02&lt;00:00,  3.12it/s]
+                 all         126         142       0.914       0.856       0.926       0.736
+
+     Epoch   gpu_mem       box       obj       cls     total    labels  img_size
+     41/49     9.03G   0.01029  0.006446  0.009182   0.02592         8       640: 100% 164/164 [01:27&lt;00:00,  1.87it/s]
+               Class      Images      Labels           P           R      mAP@.5  mAP@.5:.95: 100% 8/8 [00:02&lt;00:00,  3.08it/s]
+                 all         126         142       0.859       0.861        0.93        0.75
+
+     Epoch   gpu_mem       box       obj       cls     total    labels  img_size
+     42/49     9.03G   0.01263  0.006493  0.009897   0.02902         5       640: 100% 164/164 [01:25&lt;00:00,  1.91it/s]
+               Class      Images      Labels           P           R      mAP@.5  mAP@.5:.95: 100% 8/8 [00:03&lt;00:00,  2.16it/s]
+                 all         126         142       0.898       0.875       0.936       0.742
+
+     Epoch   gpu_mem       box       obj       cls     total    labels  img_size
+     43/49     9.03G   0.01218  0.006371  0.009487   0.02803         7       640: 100% 164/164 [01:27&lt;00:00,  1.88it/s]
+               Class      Images      Labels           P           R      mAP@.5  mAP@.5:.95: 100% 8/8 [00:02&lt;00:00,  2.77it/s]
+                 all         126         142       0.851       0.876       0.934       0.744
+
+     Epoch   gpu_mem       box       obj       cls     total    labels  img_size
+     44/49     9.03G   0.01063  0.006281  0.008945   0.02586        11       640: 100% 164/164 [01:26&lt;00:00,  1.89it/s]
+               Class      Images      Labels           P           R      mAP@.5  mAP@.5:.95: 100% 8/8 [00:02&lt;00:00,  3.22it/s]
+                 all         126         142       0.849       0.894       0.932       0.747
+
+     Epoch   gpu_mem       box       obj       cls     total    labels  img_size
+     45/49     9.03G   0.01068  0.006412  0.008523   0.02562         5       640: 100% 164/164 [01:27&lt;00:00,  1.88it/s]
+               Class      Images      Labels           P           R      mAP@.5  mAP@.5:.95: 100% 8/8 [00:02&lt;00:00,  3.08it/s]
+                 all         126         142       0.906       0.833       0.926       0.746
+
+     Epoch   gpu_mem       box       obj       cls     total    labels  img_size
+     46/49     9.03G    0.0103  0.006481  0.008651   0.02543        10       640: 100% 164/164 [01:29&lt;00:00,  1.83it/s]
+               Class      Images      Labels           P           R      mAP@.5  mAP@.5:.95: 100% 8/8 [00:02&lt;00:00,  3.15it/s]
+                 all         126         142       0.849       0.878       0.925       0.744
+
+     Epoch   gpu_mem       box       obj       cls     total    labels  img_size
+     47/49     9.03G   0.01238  0.006284  0.008799   0.02747         4       640: 100% 164/164 [01:28&lt;00:00,  1.86it/s]
+               Class      Images      Labels           P           R      mAP@.5  mAP@.5:.95: 100% 8/8 [00:03&lt;00:00,  2.06it/s]
+                 all         126         142       0.883       0.876       0.943       0.756
+
+     Epoch   gpu_mem       box       obj       cls     total    labels  img_size
+     48/49     9.03G   0.01148  0.006134  0.008581    0.0262        10       640: 100% 164/164 [01:28&lt;00:00,  1.85it/s]
+               Class      Images      Labels           P           R      mAP@.5  mAP@.5:.95: 100% 8/8 [00:02&lt;00:00,  3.22it/s]
+                 all         126         142       0.898       0.921       0.953        0.78
+
+     Epoch   gpu_mem       box       obj       cls     total    labels  img_size
+     49/49     9.03G   0.01129  0.006282  0.008306   0.02587         9       640: 100% 164/164 [01:30&lt;00:00,  1.82it/s]
+               Class      Images      Labels           P           R      mAP@.5  mAP@.5:.95: 100% 8/8 [00:03&lt;00:00,  2.19it/s]
+                 all         126         142       0.921       0.841       0.946       0.772
+         Fresh Apple         126          23       0.806           1       0.947       0.798
+        Fresh Banana         126          27           1         0.7       0.971       0.673
+         FreshOrange         126          30       0.751       0.867       0.857       0.711
+        Rotten Apple         126          13           1       0.846       0.954       0.842
+       Rotten Banana         126          28           1       0.968       0.996       0.792
+       Rotten Orange         126          21       0.969       0.667       0.949       0.815
+50 epochs completed in 1.363 hours.
+
+Optimizer stripped from runs/train/yolov7-customFruit7/weights/last.pt, 74.9MB
+Optimizer stripped from runs/train/yolov7-customFruit7/weights/best.pt, 74.9MB
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="evaluasi-model">
+<h2>1.6 Evaluasi Model<a class="headerlink" href="#evaluasi-model" title="Permalink to this heading">#</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%</span><span class="k">cd</span> /content/gdrive/MyDrive/DeepLearning/YoloV7/yolov7
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/content/gdrive/MyDrive/DeepLearning/YoloV7/yolov7
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">IPython.display</span> <span class="kn">import</span> <span class="n">Image</span>
+<span class="c1"># display(Image(&quot;/content/gdrive/MyDrive/DeepLearning/YoloV7/yolov7/runs/train/yolov7-customFruit6/train_batch9.jpg&quot;, width=400, height=400))</span>
+<span class="c1"># display(Image(&quot;/content/gdrive/MyDrive/DeepLearning/YoloV7/yolov7/runs/train/yolov7-customFruit2/F1_curve.png&quot;, width=400, height=400))</span>
+<span class="c1"># display(Image(&quot;/content/gdrive/MyDrive/DeepLearning/YoloV7/yolov7/runs/train/yolov7-customFruit2/PR_curve.png&quot;, width=400, height=400))</span>
+<span class="c1"># display(Image(&quot;/content/gdrive/MyDrive/DeepLearning/YoloV7/yolov7/runs/train/yolov7-customFruit2/confusion_matrix.png&quot;, width=500, height=500))</span>
+<span class="n">display</span><span class="p">(</span><span class="n">Image</span><span class="p">(</span><span class="s2">&quot;/content/gdrive/MyDrive/DeepLearning/YoloV7/yolov7/runs/train/yolov7-customFruit6/confusion_matrix.png&quot;</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="mi">500</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="mi">500</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="_images/d97138196a7ff5a5fe33622428741837ae00be117c8f1b8bdfb56e771c41abae.png" src="_images/d97138196a7ff5a5fe33622428741837ae00be117c8f1b8bdfb56e771c41abae.png" />
+</div>
+</div>
+</section>
+<section id="prediksi-data">
+<h2>1.7 Prediksi Data<a class="headerlink" href="#prediksi-data" title="Permalink to this heading">#</a></h2>
+<section id="import-training-model">
+<h3>1.7.1 Import Training Model<a class="headerlink" href="#import-training-model" title="Permalink to this heading">#</a></h3>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">!</span>python<span class="w"> </span>detect.py<span class="w"> </span>--weights<span class="w"> </span>runs/train/yolov7-customFruit2/weights/best.pt<span class="w"> </span>--conf<span class="w"> </span><span class="m">0</span>.1<span class="w"> </span>--source<span class="w"> </span>Fruit-Freshness-7/test/images
+<span class="c1"># !python detect.py --weights runs/train/yolov7-customVehicle/weights/best.pt --conf 0.1 --source Vehicles-OpenImages-1/test/images</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Namespace(weights=[&#39;runs/train/yolov7-customFruit2/weights/best.pt&#39;], source=&#39;Fruit-Freshness-7/test/images&#39;, img_size=640, conf_thres=0.1, iou_thres=0.45, device=&#39;&#39;, view_img=False, save_txt=False, save_conf=False, nosave=False, classes=None, agnostic_nms=False, augment=False, update=False, project=&#39;runs/detect&#39;, name=&#39;exp&#39;, exist_ok=False, no_trace=False)
+YOLOR 🚀 v0.1-104-g941b94c torch 2.0.1+cu118 CPU
+
+Fusing layers... 
+RepConv.fuse_repvgg_block
+RepConv.fuse_repvgg_block
+RepConv.fuse_repvgg_block
+IDetect.fuse
+Model Summary: 314 layers, 36508742 parameters, 6194944 gradients
+ Convert model to Traced-model... 
+ traced_script_module saved! 
+ model is traced! 
+
+Traceback (most recent call last):
+  File &quot;/content/gdrive/MyDrive/DeepLearning/YoloV7/yolov7/detect.py&quot;, line 195, in &lt;module&gt;
+    detect()
+  File &quot;/content/gdrive/MyDrive/DeepLearning/YoloV7/yolov7/detect.py&quot;, line 57, in detect
+    dataset = LoadImages(source, img_size=imgsz, stride=stride)
+  File &quot;/content/gdrive/MyDrive/DeepLearning/YoloV7/yolov7/utils/datasets.py&quot;, line 138, in __init__
+    raise Exception(f&#39;ERROR: {p} does not exist&#39;)
+Exception: ERROR: /content/gdrive/MyDrive/DeepLearning/YoloV7/yolov7/Fruit-Freshness-7/test/images does not exist
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="prediksi-image">
+<h3>1.7.2 Prediksi Image<a class="headerlink" href="#prediksi-image" title="Permalink to this heading">#</a></h3>
+<section id="test-dengan-dataset-test">
+<h4>Test Dengan Dataset Test<a class="headerlink" href="#test-dengan-dataset-test" title="Permalink to this heading">#</a></h4>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#display inference on ALL test images</span>
+
+<span class="kn">import</span> <span class="nn">glob</span>
+<span class="kn">from</span> <span class="nn">IPython.display</span> <span class="kn">import</span> <span class="n">Image</span><span class="p">,</span> <span class="n">display</span>
+
+<span class="n">i</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="n">limit</span> <span class="o">=</span> <span class="mi">10000</span> <span class="c1"># max images to print</span>
+<span class="k">for</span> <span class="n">imageName</span> <span class="ow">in</span> <span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="s1">&#39;/content/gdrive/MyDrive/DeepLearning/YoloV7/yolov7/runs/detect/exp*.jpg&#39;</span><span class="p">):</span>
+    <span class="c1">#Assuming JPG</span>
+    <span class="k">if</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">limit</span><span class="p">:</span>
+      <span class="n">display</span><span class="p">(</span><span class="n">Image</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="n">imageName</span><span class="p">))</span>
+      <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="n">i</span> <span class="o">=</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">1</span>
+
+<span class="n">display</span><span class="p">(</span><span class="n">Image</span><span class="p">(</span><span class="s2">&quot;/content/gdrive/MyDrive/DeepLearning/YoloV7/yolov7/runs/detect/exp/rotated_by_15_Screen-Shot-2018-06-12-at-8-49-04-PM_png.rf.b817ba7234022e8610d1441396e21a35.jpg&quot;</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="mi">400</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="mi">400</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="_images/747254236a3421a6d832d6a26194334b495fd3b1cf52324210a8098b5e99d6aa.jpg" src="_images/747254236a3421a6d832d6a26194334b495fd3b1cf52324210a8098b5e99d6aa.jpg" />
+</div>
+</div>
+</section>
+<section id="membuat-bounding-box">
+<h4>Membuat Bounding Box<a class="headerlink" href="#membuat-bounding-box" title="Permalink to this heading">#</a></h4>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;/content/gdrive/MyDrive/YoloV7/yolov7&#39;</span><span class="p">)</span>
+
+
+<span class="kn">import</span> <span class="nn">argparse</span>
+<span class="kn">import</span> <span class="nn">time</span>
+<span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
+<span class="kn">import</span> <span class="nn">cv2</span>
+<span class="kn">import</span> <span class="nn">torch</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">torch.backends.cudnn</span> <span class="k">as</span> <span class="nn">cudnn</span>
+<span class="kn">from</span> <span class="nn">numpy</span> <span class="kn">import</span> <span class="n">random</span>
+
+<span class="kn">from</span> <span class="nn">models.experimental</span> <span class="kn">import</span> <span class="n">attempt_load</span>
+<span class="kn">from</span> <span class="nn">utils.datasets</span> <span class="kn">import</span> <span class="n">LoadStreams</span><span class="p">,</span> <span class="n">LoadImages</span>
+<span class="kn">from</span> <span class="nn">utils.general</span> <span class="kn">import</span> <span class="n">check_img_size</span><span class="p">,</span> <span class="n">check_requirements</span><span class="p">,</span> <span class="n">check_imshow</span><span class="p">,</span> <span class="n">non_max_suppression</span><span class="p">,</span> <span class="n">apply_classifier</span><span class="p">,</span> \
+    <span class="n">scale_coords</span><span class="p">,</span> <span class="n">xyxy2xywh</span><span class="p">,</span> <span class="n">strip_optimizer</span><span class="p">,</span> <span class="n">set_logging</span><span class="p">,</span> <span class="n">increment_path</span>
+<span class="kn">from</span> <span class="nn">utils.plots</span> <span class="kn">import</span> <span class="n">plot_one_box</span>
+<span class="kn">from</span> <span class="nn">utils.torch_utils</span> <span class="kn">import</span> <span class="n">select_device</span><span class="p">,</span> <span class="n">load_classifier</span><span class="p">,</span> <span class="n">time_synchronized</span><span class="p">,</span> <span class="n">TracedModel</span>
+
+
+<span class="k">def</span> <span class="nf">letterbox</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="n">new_shape</span><span class="o">=</span><span class="p">(</span><span class="mi">640</span><span class="p">,</span> <span class="mi">640</span><span class="p">),</span> <span class="n">color</span><span class="o">=</span><span class="p">(</span><span class="mi">114</span><span class="p">,</span> <span class="mi">114</span><span class="p">,</span> <span class="mi">114</span><span class="p">),</span> <span class="n">auto</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">scaleFill</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">scaleup</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">stride</span><span class="o">=</span><span class="mi">32</span><span class="p">):</span>
+    <span class="n">shape</span> <span class="o">=</span> <span class="n">img</span><span class="o">.</span><span class="n">shape</span><span class="p">[:</span><span class="mi">2</span><span class="p">]</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">new_shape</span><span class="p">,</span> <span class="nb">int</span><span class="p">):</span>
+        <span class="n">new_shape</span> <span class="o">=</span> <span class="p">(</span><span class="n">new_shape</span><span class="p">,</span> <span class="n">new_shape</span><span class="p">)</span>
+
+    <span class="n">r</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">new_shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">/</span> <span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">new_shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">/</span> <span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">scaleup</span><span class="p">:</span>
+        <span class="n">r</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">r</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">)</span>
+
+    <span class="n">ratio</span> <span class="o">=</span> <span class="n">r</span><span class="p">,</span> <span class="n">r</span>
+    <span class="n">new_unpad</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="nb">round</span><span class="p">(</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="n">r</span><span class="p">)),</span> <span class="nb">int</span><span class="p">(</span><span class="nb">round</span><span class="p">(</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="n">r</span><span class="p">))</span>
+    <span class="n">dw</span><span class="p">,</span> <span class="n">dh</span> <span class="o">=</span> <span class="n">new_shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">new_unpad</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">new_shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">new_unpad</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+    <span class="k">if</span> <span class="n">auto</span><span class="p">:</span>
+        <span class="n">dw</span><span class="p">,</span> <span class="n">dh</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mod</span><span class="p">(</span><span class="n">dw</span><span class="p">,</span> <span class="n">stride</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">mod</span><span class="p">(</span><span class="n">dh</span><span class="p">,</span> <span class="n">stride</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">scaleFill</span><span class="p">:</span>
+        <span class="n">dw</span><span class="p">,</span> <span class="n">dh</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span>
+        <span class="n">new_unpad</span> <span class="o">=</span> <span class="p">(</span><span class="n">new_shape</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">new_shape</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+        <span class="n">ratio</span> <span class="o">=</span> <span class="n">new_shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">/</span> <span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">new_shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">/</span> <span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+
+
+    <span class="n">dw</span> <span class="o">/=</span> <span class="mi">2</span>
+    <span class="n">dh</span> <span class="o">/=</span> <span class="mi">2</span>
+
+    <span class="k">if</span> <span class="n">shape</span><span class="p">[::</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">!=</span> <span class="n">new_unpad</span><span class="p">:</span>
+        <span class="n">img</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">resize</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="n">new_unpad</span><span class="p">,</span> <span class="n">interpolation</span><span class="o">=</span><span class="n">cv2</span><span class="o">.</span><span class="n">INTER_LINEAR</span><span class="p">)</span>
+    <span class="n">top</span><span class="p">,</span> <span class="n">bottom</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="nb">round</span><span class="p">(</span><span class="n">dh</span> <span class="o">-</span> <span class="mf">0.1</span><span class="p">)),</span> <span class="nb">int</span><span class="p">(</span><span class="nb">round</span><span class="p">(</span><span class="n">dh</span> <span class="o">+</span> <span class="mf">0.1</span><span class="p">))</span>
+    <span class="n">left</span><span class="p">,</span> <span class="n">right</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="nb">round</span><span class="p">(</span><span class="n">dw</span> <span class="o">-</span> <span class="mf">0.1</span><span class="p">)),</span> <span class="nb">int</span><span class="p">(</span><span class="nb">round</span><span class="p">(</span><span class="n">dw</span> <span class="o">+</span> <span class="mf">0.1</span><span class="p">))</span>
+    <span class="n">img</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">copyMakeBorder</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="n">top</span><span class="p">,</span> <span class="n">bottom</span><span class="p">,</span> <span class="n">left</span><span class="p">,</span> <span class="n">right</span><span class="p">,</span> <span class="n">cv2</span><span class="o">.</span><span class="n">BORDER_CONSTANT</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="n">color</span><span class="p">)</span>  <span class="c1"># add border</span>
+    <span class="k">return</span> <span class="n">img</span><span class="p">,</span> <span class="n">ratio</span><span class="p">,</span> <span class="p">(</span><span class="n">dw</span><span class="p">,</span> <span class="n">dh</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">classes_to_filter</span> <span class="o">=</span> <span class="kc">None</span>
+
+
+<span class="n">opt</span>  <span class="o">=</span> <span class="p">{</span>
+
+    <span class="s2">&quot;weights&quot;</span><span class="p">:</span> <span class="s2">&quot;/content/gdrive/MyDrive/DeepLearning/YoloV7/yolov7/runs/train/yolov7-customFruit7/weights/last.pt&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;yaml&quot;</span>   <span class="p">:</span> <span class="s2">&quot;/content/gdrive/MyDrive/DeepLearning/YoloV7/yolov7/Fruit-Freshness-3/data.yaml&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;img-size&quot;</span><span class="p">:</span> <span class="mi">640</span><span class="p">,</span>
+    <span class="s2">&quot;conf-thres&quot;</span><span class="p">:</span> <span class="mf">0.25</span><span class="p">,</span>
+    <span class="s2">&quot;iou-thres&quot;</span> <span class="p">:</span> <span class="mf">0.45</span><span class="p">,</span>
+    <span class="s2">&quot;device&quot;</span> <span class="p">:</span> <span class="s1">&#39;0&#39;</span><span class="p">,</span>
+    <span class="s2">&quot;classes&quot;</span> <span class="p">:</span> <span class="n">classes_to_filter</span>
+
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">source_image_path</span> <span class="o">=</span> <span class="s1">&#39;/content/gdrive/MyDrive/DeepLearning/YoloV7/yolov7/test8.png&#39;</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">with</span> <span class="n">torch</span><span class="o">.</span><span class="n">no_grad</span><span class="p">():</span>
+  <span class="n">weights</span><span class="p">,</span> <span class="n">imgsz</span> <span class="o">=</span> <span class="n">opt</span><span class="p">[</span><span class="s1">&#39;weights&#39;</span><span class="p">],</span> <span class="n">opt</span><span class="p">[</span><span class="s1">&#39;img-size&#39;</span><span class="p">]</span>
+  <span class="n">set_logging</span><span class="p">()</span>
+  <span class="c1"># device = select_device(opt[&#39;device&#39;])</span>
+  <span class="n">device</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">device</span><span class="p">(</span><span class="s2">&quot;cpu&quot;</span><span class="p">)</span>
+  <span class="n">half</span> <span class="o">=</span> <span class="n">device</span><span class="o">.</span><span class="n">type</span> <span class="o">!=</span> <span class="s1">&#39;cpu&#39;</span>
+  <span class="n">model</span> <span class="o">=</span> <span class="n">attempt_load</span><span class="p">(</span><span class="n">weights</span><span class="p">,</span> <span class="n">map_location</span><span class="o">=</span><span class="n">device</span><span class="p">)</span>
+  <span class="n">stride</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">stride</span><span class="o">.</span><span class="n">max</span><span class="p">())</span>
+  <span class="n">imgsz</span> <span class="o">=</span> <span class="n">check_img_size</span><span class="p">(</span><span class="n">imgsz</span><span class="p">,</span> <span class="n">s</span><span class="o">=</span><span class="n">stride</span><span class="p">)</span>
+  <span class="k">if</span> <span class="n">half</span><span class="p">:</span>
+    <span class="n">model</span><span class="o">.</span><span class="n">half</span><span class="p">()</span>
+
+  <span class="n">names</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">module</span><span class="o">.</span><span class="n">names</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="s1">&#39;module&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="n">model</span><span class="o">.</span><span class="n">names</span>
+  <span class="n">colors</span> <span class="o">=</span> <span class="p">[[</span><span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">255</span><span class="p">)</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">3</span><span class="p">)]</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="n">names</span><span class="p">]</span>
+  <span class="k">if</span> <span class="n">device</span><span class="o">.</span><span class="n">type</span> <span class="o">!=</span> <span class="s1">&#39;cpu&#39;</span><span class="p">:</span>
+    <span class="n">model</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="n">imgsz</span><span class="p">,</span> <span class="n">imgsz</span><span class="p">)</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">device</span><span class="p">)</span><span class="o">.</span><span class="n">type_as</span><span class="p">(</span><span class="nb">next</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">parameters</span><span class="p">())))</span>
+
+  <span class="n">img0</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">imread</span><span class="p">(</span><span class="n">source_image_path</span><span class="p">)</span>
+  <span class="n">img</span> <span class="o">=</span> <span class="n">letterbox</span><span class="p">(</span><span class="n">img0</span><span class="p">,</span> <span class="n">imgsz</span><span class="p">,</span> <span class="n">stride</span><span class="o">=</span><span class="n">stride</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+  <span class="n">img</span> <span class="o">=</span> <span class="n">img</span><span class="p">[:,</span> <span class="p">:,</span> <span class="p">::</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+  <span class="n">img</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ascontiguousarray</span><span class="p">(</span><span class="n">img</span><span class="p">)</span>
+  <span class="n">img</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">from_numpy</span><span class="p">(</span><span class="n">img</span><span class="p">)</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">device</span><span class="p">)</span>
+  <span class="n">img</span> <span class="o">=</span> <span class="n">img</span><span class="o">.</span><span class="n">half</span><span class="p">()</span> <span class="k">if</span> <span class="n">half</span> <span class="k">else</span> <span class="n">img</span><span class="o">.</span><span class="n">float</span><span class="p">()</span>
+  <span class="n">img</span> <span class="o">/=</span> <span class="mf">255.0</span>
+  <span class="k">if</span> <span class="n">img</span><span class="o">.</span><span class="n">ndimension</span><span class="p">()</span> <span class="o">==</span> <span class="mi">3</span><span class="p">:</span>
+    <span class="n">img</span> <span class="o">=</span> <span class="n">img</span><span class="o">.</span><span class="n">unsqueeze</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+
+  <span class="n">t1</span> <span class="o">=</span> <span class="n">time_synchronized</span><span class="p">()</span>
+  <span class="n">pred</span> <span class="o">=</span> <span class="n">model</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="n">augment</span><span class="o">=</span> <span class="kc">False</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+
+  <span class="n">classes</span> <span class="o">=</span> <span class="kc">None</span>
+  <span class="k">if</span> <span class="n">opt</span><span class="p">[</span><span class="s1">&#39;classes&#39;</span><span class="p">]:</span>
+    <span class="n">classes</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">class_name</span> <span class="ow">in</span> <span class="n">opt</span><span class="p">[</span><span class="s1">&#39;classes&#39;</span><span class="p">]:</span>
+
+      <span class="n">classes</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">opt</span><span class="p">[</span><span class="s1">&#39;classes&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">class_name</span><span class="p">))</span>
+
+
+  <span class="n">pred</span> <span class="o">=</span> <span class="n">non_max_suppression</span><span class="p">(</span><span class="n">pred</span><span class="p">,</span> <span class="n">opt</span><span class="p">[</span><span class="s1">&#39;conf-thres&#39;</span><span class="p">],</span> <span class="n">opt</span><span class="p">[</span><span class="s1">&#39;iou-thres&#39;</span><span class="p">],</span> <span class="n">classes</span><span class="o">=</span> <span class="n">classes</span><span class="p">,</span> <span class="n">agnostic</span><span class="o">=</span> <span class="kc">False</span><span class="p">)</span>
+  <span class="n">t2</span> <span class="o">=</span> <span class="n">time_synchronized</span><span class="p">()</span>
+  <span class="n">pred_label</span> <span class="o">=</span> <span class="p">[]</span>
+  <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">det</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">pred</span><span class="p">):</span>
+    <span class="n">s</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+    <span class="n">s</span> <span class="o">+=</span> <span class="s1">&#39;</span><span class="si">%g</span><span class="s1">x</span><span class="si">%g</span><span class="s1"> &#39;</span> <span class="o">%</span> <span class="n">img</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">2</span><span class="p">:]</span>
+    <span class="n">gn</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">(</span><span class="n">img0</span><span class="o">.</span><span class="n">shape</span><span class="p">)[[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">]]</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">det</span><span class="p">):</span>
+      <span class="n">det</span><span class="p">[:,</span> <span class="p">:</span><span class="mi">4</span><span class="p">]</span> <span class="o">=</span> <span class="n">scale_coords</span><span class="p">(</span><span class="n">img</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">2</span><span class="p">:],</span> <span class="n">det</span><span class="p">[:,</span> <span class="p">:</span><span class="mi">4</span><span class="p">],</span> <span class="n">img0</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span><span class="o">.</span><span class="n">round</span><span class="p">()</span>
+
+      <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">det</span><span class="p">[:,</span> <span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">unique</span><span class="p">():</span>
+        <span class="n">n</span> <span class="o">=</span> <span class="p">(</span><span class="n">det</span><span class="p">[:,</span> <span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="n">c</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
+        <span class="n">s</span> <span class="o">+=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">n</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">names</span><span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">c</span><span class="p">)]</span><span class="si">}{</span><span class="s1">&#39;s&#39;</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="p">(</span><span class="n">n</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span><span class="si">}</span><span class="s2">, &quot;</span>
+
+      <span class="k">for</span> <span class="o">*</span><span class="n">xyxy</span><span class="p">,</span> <span class="n">conf</span><span class="p">,</span> <span class="bp">cls</span> <span class="ow">in</span> <span class="nb">reversed</span><span class="p">(</span><span class="n">det</span><span class="p">):</span>
+
+        <span class="n">label</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">names</span><span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="bp">cls</span><span class="p">)]</span><span class="si">}</span><span class="s1"> </span><span class="si">{</span><span class="n">conf</span><span class="si">:</span><span class="s1">.2f</span><span class="si">}</span><span class="s1">&#39;</span>
+        <span class="n">pred_label</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">label</span><span class="p">)</span>
+        <span class="n">plot_one_box</span><span class="p">(</span><span class="n">xyxy</span><span class="p">,</span> <span class="n">img0</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="n">label</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">colors</span><span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="bp">cls</span><span class="p">)],</span> <span class="n">line_thickness</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Fusing layers... 
+RepConv.fuse_repvgg_block
+RepConv.fuse_repvgg_block
+RepConv.fuse_repvgg_block
+IDetect.fuse
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/usr/local/lib/python3.10/dist-packages/torch/functional.py:504: UserWarning: torch.meshgrid: in an upcoming release, it will be required to pass the indexing argument. (Triggered internally at ../aten/src/ATen/native/TensorShape.cpp:3483.)
+  return _VF.meshgrid(tensors, **kwargs)  # type: ignore[attr-defined]
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">google.colab.patches</span> <span class="kn">import</span> <span class="n">cv2_imshow</span>
+<span class="n">cv2_imshow</span><span class="p">(</span><span class="n">img0</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">pred_label</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Output hidden; open in https://colab.research.google.com to view.
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="prediksi-video">
+<h3>1.7.3 Prediksi Video<a class="headerlink" href="#prediksi-video" title="Permalink to this heading">#</a></h3>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">video_path</span> <span class="o">=</span> <span class="s1">&#39;/content/gdrive/MyDrive/DeepLearning/YoloV7/yolov7/TestVideo3.mp4&#39;</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Initializing video object</span>
+<span class="n">video</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">VideoCapture</span><span class="p">(</span><span class="n">video_path</span><span class="p">)</span>
+
+
+<span class="c1">#Video information</span>
+<span class="n">fps</span> <span class="o">=</span> <span class="n">video</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">cv2</span><span class="o">.</span><span class="n">CAP_PROP_FPS</span><span class="p">)</span>
+<span class="n">w</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">video</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">cv2</span><span class="o">.</span><span class="n">CAP_PROP_FRAME_WIDTH</span><span class="p">))</span>
+<span class="n">h</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">video</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">cv2</span><span class="o">.</span><span class="n">CAP_PROP_FRAME_HEIGHT</span><span class="p">))</span>
+<span class="n">nframes</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">video</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">cv2</span><span class="o">.</span><span class="n">CAP_PROP_FRAME_COUNT</span><span class="p">))</span>
+
+<span class="c1"># Initialzing object for writing video output</span>
+<span class="n">output</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">VideoWriter</span><span class="p">(</span><span class="s1">&#39;output2.mp4&#39;</span><span class="p">,</span> <span class="n">cv2</span><span class="o">.</span><span class="n">VideoWriter_fourcc</span><span class="p">(</span><span class="o">*</span><span class="s1">&#39;DIVX&#39;</span><span class="p">),</span><span class="n">fps</span> <span class="p">,</span> <span class="p">(</span><span class="n">w</span><span class="p">,</span><span class="n">h</span><span class="p">))</span>
+<span class="n">torch</span><span class="o">.</span><span class="n">cuda</span><span class="o">.</span><span class="n">empty_cache</span><span class="p">()</span>
+<span class="c1"># Initializing model and setting it for inference</span>
+<span class="k">with</span> <span class="n">torch</span><span class="o">.</span><span class="n">no_grad</span><span class="p">():</span>
+  <span class="n">weights</span><span class="p">,</span> <span class="n">imgsz</span> <span class="o">=</span> <span class="n">opt</span><span class="p">[</span><span class="s1">&#39;weights&#39;</span><span class="p">],</span> <span class="n">opt</span><span class="p">[</span><span class="s1">&#39;img-size&#39;</span><span class="p">]</span>
+  <span class="n">set_logging</span><span class="p">()</span>
+  <span class="n">device</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">device</span><span class="p">(</span><span class="s2">&quot;cpu&quot;</span><span class="p">)</span>
+  <span class="c1"># device = select_device(opt[&#39;device&#39;])</span>
+  <span class="n">half</span> <span class="o">=</span> <span class="n">device</span><span class="o">.</span><span class="n">type</span> <span class="o">!=</span> <span class="s1">&#39;cpu&#39;</span>
+  <span class="n">model</span> <span class="o">=</span> <span class="n">attempt_load</span><span class="p">(</span><span class="n">weights</span><span class="p">,</span> <span class="n">map_location</span><span class="o">=</span><span class="n">device</span><span class="p">)</span>  <span class="c1"># load FP32 model</span>
+  <span class="n">stride</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">stride</span><span class="o">.</span><span class="n">max</span><span class="p">())</span>  <span class="c1"># model stride</span>
+  <span class="n">imgsz</span> <span class="o">=</span> <span class="n">check_img_size</span><span class="p">(</span><span class="n">imgsz</span><span class="p">,</span> <span class="n">s</span><span class="o">=</span><span class="n">stride</span><span class="p">)</span>  <span class="c1"># check img_size</span>
+  <span class="k">if</span> <span class="n">half</span><span class="p">:</span>
+    <span class="n">model</span><span class="o">.</span><span class="n">half</span><span class="p">()</span>
+
+  <span class="n">names</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">module</span><span class="o">.</span><span class="n">names</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="s1">&#39;module&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="n">model</span><span class="o">.</span><span class="n">names</span>
+  <span class="n">colors</span> <span class="o">=</span> <span class="p">[[</span><span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">255</span><span class="p">)</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">3</span><span class="p">)]</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="n">names</span><span class="p">]</span>
+  <span class="k">if</span> <span class="n">device</span><span class="o">.</span><span class="n">type</span> <span class="o">!=</span> <span class="s1">&#39;cpu&#39;</span><span class="p">:</span>
+    <span class="n">model</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="n">imgsz</span><span class="p">,</span> <span class="n">imgsz</span><span class="p">)</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">device</span><span class="p">)</span><span class="o">.</span><span class="n">type_as</span><span class="p">(</span><span class="nb">next</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">parameters</span><span class="p">())))</span>
+
+  <span class="n">classes</span> <span class="o">=</span> <span class="kc">None</span>
+  <span class="k">if</span> <span class="n">opt</span><span class="p">[</span><span class="s1">&#39;classes&#39;</span><span class="p">]:</span>
+    <span class="n">classes</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">class_name</span> <span class="ow">in</span> <span class="n">opt</span><span class="p">[</span><span class="s1">&#39;classes&#39;</span><span class="p">]:</span>
+      <span class="n">classes</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">opt</span><span class="p">[</span><span class="s1">&#39;classes&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">class_name</span><span class="p">))</span>
+
+  <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">nframes</span><span class="p">):</span>
+
+      <span class="n">ret</span><span class="p">,</span> <span class="n">img0</span> <span class="o">=</span> <span class="n">video</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+      <span class="k">if</span> <span class="n">ret</span><span class="p">:</span>
+        <span class="n">img</span> <span class="o">=</span> <span class="n">letterbox</span><span class="p">(</span><span class="n">img0</span><span class="p">,</span> <span class="n">imgsz</span><span class="p">,</span> <span class="n">stride</span><span class="o">=</span><span class="n">stride</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">img</span> <span class="o">=</span> <span class="n">img</span><span class="p">[:,</span> <span class="p">:,</span> <span class="p">::</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>  <span class="c1"># BGR to RGB, to 3x416x416</span>
+        <span class="n">img</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ascontiguousarray</span><span class="p">(</span><span class="n">img</span><span class="p">)</span>
+        <span class="n">img</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">from_numpy</span><span class="p">(</span><span class="n">img</span><span class="p">)</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">device</span><span class="p">)</span>
+        <span class="n">img</span> <span class="o">=</span> <span class="n">img</span><span class="o">.</span><span class="n">half</span><span class="p">()</span> <span class="k">if</span> <span class="n">half</span> <span class="k">else</span> <span class="n">img</span><span class="o">.</span><span class="n">float</span><span class="p">()</span>  <span class="c1"># uint8 to fp16/32</span>
+        <span class="n">img</span> <span class="o">/=</span> <span class="mf">255.0</span>  <span class="c1"># 0 - 255 to 0.0 - 1.0</span>
+        <span class="k">if</span> <span class="n">img</span><span class="o">.</span><span class="n">ndimension</span><span class="p">()</span> <span class="o">==</span> <span class="mi">3</span><span class="p">:</span>
+          <span class="n">img</span> <span class="o">=</span> <span class="n">img</span><span class="o">.</span><span class="n">unsqueeze</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+
+        <span class="c1"># Inference</span>
+        <span class="n">t1</span> <span class="o">=</span> <span class="n">time_synchronized</span><span class="p">()</span>
+        <span class="n">pred</span> <span class="o">=</span> <span class="n">model</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="n">augment</span><span class="o">=</span> <span class="kc">False</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+
+
+        <span class="n">pred</span> <span class="o">=</span> <span class="n">non_max_suppression</span><span class="p">(</span><span class="n">pred</span><span class="p">,</span> <span class="n">opt</span><span class="p">[</span><span class="s1">&#39;conf-thres&#39;</span><span class="p">],</span> <span class="n">opt</span><span class="p">[</span><span class="s1">&#39;iou-thres&#39;</span><span class="p">],</span> <span class="n">classes</span><span class="o">=</span> <span class="n">classes</span><span class="p">,</span> <span class="n">agnostic</span><span class="o">=</span> <span class="kc">False</span><span class="p">)</span>
+        <span class="n">t2</span> <span class="o">=</span> <span class="n">time_synchronized</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">det</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">pred</span><span class="p">):</span>
+          <span class="n">s</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+          <span class="n">s</span> <span class="o">+=</span> <span class="s1">&#39;</span><span class="si">%g</span><span class="s1">x</span><span class="si">%g</span><span class="s1"> &#39;</span> <span class="o">%</span> <span class="n">img</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">2</span><span class="p">:]</span>  <span class="c1"># print string</span>
+          <span class="n">gn</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">(</span><span class="n">img0</span><span class="o">.</span><span class="n">shape</span><span class="p">)[[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">]]</span>
+          <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">det</span><span class="p">):</span>
+            <span class="n">det</span><span class="p">[:,</span> <span class="p">:</span><span class="mi">4</span><span class="p">]</span> <span class="o">=</span> <span class="n">scale_coords</span><span class="p">(</span><span class="n">img</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">2</span><span class="p">:],</span> <span class="n">det</span><span class="p">[:,</span> <span class="p">:</span><span class="mi">4</span><span class="p">],</span> <span class="n">img0</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span><span class="o">.</span><span class="n">round</span><span class="p">()</span>
+
+            <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">det</span><span class="p">[:,</span> <span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">unique</span><span class="p">():</span>
+              <span class="n">n</span> <span class="o">=</span> <span class="p">(</span><span class="n">det</span><span class="p">[:,</span> <span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="n">c</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>  <span class="c1"># detections per class</span>
+              <span class="n">s</span> <span class="o">+=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">n</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">names</span><span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">c</span><span class="p">)]</span><span class="si">}{</span><span class="s1">&#39;s&#39;</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="p">(</span><span class="n">n</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span><span class="si">}</span><span class="s2">, &quot;</span>  <span class="c1"># add to string</span>
+
+            <span class="k">for</span> <span class="o">*</span><span class="n">xyxy</span><span class="p">,</span> <span class="n">conf</span><span class="p">,</span> <span class="bp">cls</span> <span class="ow">in</span> <span class="nb">reversed</span><span class="p">(</span><span class="n">det</span><span class="p">):</span>
+
+              <span class="n">label</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">names</span><span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="bp">cls</span><span class="p">)]</span><span class="si">}</span><span class="s1"> </span><span class="si">{</span><span class="n">conf</span><span class="si">:</span><span class="s1">.2f</span><span class="si">}</span><span class="s1">&#39;</span>
+              <span class="n">plot_one_box</span><span class="p">(</span><span class="n">xyxy</span><span class="p">,</span> <span class="n">img0</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="n">label</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">colors</span><span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="bp">cls</span><span class="p">)],</span> <span class="n">line_thickness</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">j</span><span class="o">+</span><span class="mi">1</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="n">nframes</span><span class="si">}</span><span class="s2"> frames processed&quot;</span><span class="p">)</span>
+        <span class="n">output</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">img0</span><span class="p">)</span>
+      <span class="k">else</span><span class="p">:</span>
+        <span class="k">break</span>
+
+
+<span class="n">output</span><span class="o">.</span><span class="n">release</span><span class="p">()</span>
+<span class="n">video</span><span class="o">.</span><span class="n">release</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Fusing layers... 
+RepConv.fuse_repvgg_block
+RepConv.fuse_repvgg_block
+RepConv.fuse_repvgg_block
+IDetect.fuse
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/usr/local/lib/python3.10/dist-packages/torch/functional.py:504: UserWarning: torch.meshgrid: in an upcoming release, it will be required to pass the indexing argument. (Triggered internally at ../aten/src/ATen/native/TensorShape.cpp:3483.)
+  return _VF.meshgrid(tensors, **kwargs)  # type: ignore[attr-defined]
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>1/1705 frames processed
+2/1705 frames processed
+3/1705 frames processed
+4/1705 frames processed
+5/1705 frames processed
+6/1705 frames processed
+7/1705 frames processed
+8/1705 frames processed
+9/1705 frames processed
+10/1705 frames processed
+11/1705 frames processed
+12/1705 frames processed
+13/1705 frames processed
+14/1705 frames processed
+15/1705 frames processed
+16/1705 frames processed
+17/1705 frames processed
+18/1705 frames processed
+19/1705 frames processed
+20/1705 frames processed
+21/1705 frames processed
+22/1705 frames processed
+23/1705 frames processed
+24/1705 frames processed
+25/1705 frames processed
+26/1705 frames processed
+27/1705 frames processed
+28/1705 frames processed
+29/1705 frames processed
+30/1705 frames processed
+31/1705 frames processed
+32/1705 frames processed
+33/1705 frames processed
+34/1705 frames processed
+35/1705 frames processed
+36/1705 frames processed
+37/1705 frames processed
+38/1705 frames processed
+39/1705 frames processed
+40/1705 frames processed
+41/1705 frames processed
+42/1705 frames processed
+43/1705 frames processed
+44/1705 frames processed
+45/1705 frames processed
+46/1705 frames processed
+47/1705 frames processed
+48/1705 frames processed
+49/1705 frames processed
+50/1705 frames processed
+51/1705 frames processed
+52/1705 frames processed
+53/1705 frames processed
+54/1705 frames processed
+55/1705 frames processed
+56/1705 frames processed
+57/1705 frames processed
+58/1705 frames processed
+59/1705 frames processed
+60/1705 frames processed
+61/1705 frames processed
+62/1705 frames processed
+63/1705 frames processed
+64/1705 frames processed
+65/1705 frames processed
+66/1705 frames processed
+67/1705 frames processed
+68/1705 frames processed
+69/1705 frames processed
+70/1705 frames processed
+71/1705 frames processed
+72/1705 frames processed
+73/1705 frames processed
+74/1705 frames processed
+75/1705 frames processed
+76/1705 frames processed
+77/1705 frames processed
+78/1705 frames processed
+79/1705 frames processed
+80/1705 frames processed
+81/1705 frames processed
+82/1705 frames processed
+83/1705 frames processed
+84/1705 frames processed
+85/1705 frames processed
+86/1705 frames processed
+87/1705 frames processed
+88/1705 frames processed
+89/1705 frames processed
+90/1705 frames processed
+91/1705 frames processed
+92/1705 frames processed
+93/1705 frames processed
+94/1705 frames processed
+95/1705 frames processed
+96/1705 frames processed
+97/1705 frames processed
+98/1705 frames processed
+99/1705 frames processed
+100/1705 frames processed
+101/1705 frames processed
+102/1705 frames processed
+103/1705 frames processed
+104/1705 frames processed
+105/1705 frames processed
+106/1705 frames processed
+107/1705 frames processed
+108/1705 frames processed
+109/1705 frames processed
+110/1705 frames processed
+111/1705 frames processed
+112/1705 frames processed
+113/1705 frames processed
+114/1705 frames processed
+115/1705 frames processed
+116/1705 frames processed
+117/1705 frames processed
+118/1705 frames processed
+119/1705 frames processed
+120/1705 frames processed
+121/1705 frames processed
+122/1705 frames processed
+123/1705 frames processed
+124/1705 frames processed
+125/1705 frames processed
+126/1705 frames processed
+127/1705 frames processed
+128/1705 frames processed
+129/1705 frames processed
+130/1705 frames processed
+131/1705 frames processed
+132/1705 frames processed
+133/1705 frames processed
+134/1705 frames processed
+135/1705 frames processed
+136/1705 frames processed
+137/1705 frames processed
+138/1705 frames processed
+139/1705 frames processed
+140/1705 frames processed
+141/1705 frames processed
+142/1705 frames processed
+143/1705 frames processed
+144/1705 frames processed
+145/1705 frames processed
+146/1705 frames processed
+147/1705 frames processed
+148/1705 frames processed
+149/1705 frames processed
+150/1705 frames processed
+151/1705 frames processed
+152/1705 frames processed
+153/1705 frames processed
+154/1705 frames processed
+155/1705 frames processed
+156/1705 frames processed
+157/1705 frames processed
+158/1705 frames processed
+159/1705 frames processed
+160/1705 frames processed
+161/1705 frames processed
+162/1705 frames processed
+163/1705 frames processed
+164/1705 frames processed
+165/1705 frames processed
+166/1705 frames processed
+167/1705 frames processed
+168/1705 frames processed
+169/1705 frames processed
+170/1705 frames processed
+171/1705 frames processed
+172/1705 frames processed
+173/1705 frames processed
+174/1705 frames processed
+175/1705 frames processed
+176/1705 frames processed
+177/1705 frames processed
+178/1705 frames processed
+179/1705 frames processed
+180/1705 frames processed
+181/1705 frames processed
+182/1705 frames processed
+183/1705 frames processed
+184/1705 frames processed
+185/1705 frames processed
+186/1705 frames processed
+187/1705 frames processed
+188/1705 frames processed
+189/1705 frames processed
+190/1705 frames processed
+191/1705 frames processed
+192/1705 frames processed
+193/1705 frames processed
+194/1705 frames processed
+195/1705 frames processed
+196/1705 frames processed
+197/1705 frames processed
+198/1705 frames processed
+199/1705 frames processed
+200/1705 frames processed
+201/1705 frames processed
+202/1705 frames processed
+203/1705 frames processed
+204/1705 frames processed
+205/1705 frames processed
+206/1705 frames processed
+207/1705 frames processed
+208/1705 frames processed
+209/1705 frames processed
+210/1705 frames processed
+211/1705 frames processed
+212/1705 frames processed
+213/1705 frames processed
+214/1705 frames processed
+215/1705 frames processed
+216/1705 frames processed
+217/1705 frames processed
+218/1705 frames processed
+219/1705 frames processed
+220/1705 frames processed
+221/1705 frames processed
+222/1705 frames processed
+223/1705 frames processed
+224/1705 frames processed
+225/1705 frames processed
+226/1705 frames processed
+227/1705 frames processed
+228/1705 frames processed
+229/1705 frames processed
+230/1705 frames processed
+231/1705 frames processed
+232/1705 frames processed
+233/1705 frames processed
+234/1705 frames processed
+235/1705 frames processed
+236/1705 frames processed
+237/1705 frames processed
+238/1705 frames processed
+239/1705 frames processed
+240/1705 frames processed
+241/1705 frames processed
+242/1705 frames processed
+243/1705 frames processed
+244/1705 frames processed
+245/1705 frames processed
+246/1705 frames processed
+247/1705 frames processed
+248/1705 frames processed
+249/1705 frames processed
+250/1705 frames processed
+251/1705 frames processed
+252/1705 frames processed
+253/1705 frames processed
+254/1705 frames processed
+255/1705 frames processed
+256/1705 frames processed
+257/1705 frames processed
+258/1705 frames processed
+259/1705 frames processed
+260/1705 frames processed
+261/1705 frames processed
+262/1705 frames processed
+263/1705 frames processed
+264/1705 frames processed
+265/1705 frames processed
+266/1705 frames processed
+267/1705 frames processed
+268/1705 frames processed
+269/1705 frames processed
+270/1705 frames processed
+271/1705 frames processed
+272/1705 frames processed
+273/1705 frames processed
+274/1705 frames processed
+275/1705 frames processed
+276/1705 frames processed
+277/1705 frames processed
+278/1705 frames processed
+279/1705 frames processed
+280/1705 frames processed
+281/1705 frames processed
+282/1705 frames processed
+283/1705 frames processed
+284/1705 frames processed
+285/1705 frames processed
+286/1705 frames processed
+287/1705 frames processed
+288/1705 frames processed
+289/1705 frames processed
+290/1705 frames processed
+291/1705 frames processed
+292/1705 frames processed
+293/1705 frames processed
+294/1705 frames processed
+295/1705 frames processed
+296/1705 frames processed
+297/1705 frames processed
+298/1705 frames processed
+299/1705 frames processed
+300/1705 frames processed
+301/1705 frames processed
+302/1705 frames processed
+303/1705 frames processed
+304/1705 frames processed
+305/1705 frames processed
+306/1705 frames processed
+307/1705 frames processed
+308/1705 frames processed
+309/1705 frames processed
+310/1705 frames processed
+311/1705 frames processed
+312/1705 frames processed
+313/1705 frames processed
+314/1705 frames processed
+315/1705 frames processed
+316/1705 frames processed
+317/1705 frames processed
+318/1705 frames processed
+319/1705 frames processed
+320/1705 frames processed
+321/1705 frames processed
+322/1705 frames processed
+323/1705 frames processed
+324/1705 frames processed
+325/1705 frames processed
+326/1705 frames processed
+327/1705 frames processed
+328/1705 frames processed
+329/1705 frames processed
+330/1705 frames processed
+331/1705 frames processed
+332/1705 frames processed
+333/1705 frames processed
+334/1705 frames processed
+335/1705 frames processed
+336/1705 frames processed
+337/1705 frames processed
+338/1705 frames processed
+339/1705 frames processed
+340/1705 frames processed
+341/1705 frames processed
+342/1705 frames processed
+343/1705 frames processed
+344/1705 frames processed
+345/1705 frames processed
+346/1705 frames processed
+347/1705 frames processed
+348/1705 frames processed
+349/1705 frames processed
+350/1705 frames processed
+351/1705 frames processed
+352/1705 frames processed
+353/1705 frames processed
+354/1705 frames processed
+355/1705 frames processed
+356/1705 frames processed
+357/1705 frames processed
+358/1705 frames processed
+359/1705 frames processed
+360/1705 frames processed
+361/1705 frames processed
+362/1705 frames processed
+363/1705 frames processed
+364/1705 frames processed
+365/1705 frames processed
+366/1705 frames processed
+367/1705 frames processed
+368/1705 frames processed
+369/1705 frames processed
+370/1705 frames processed
+371/1705 frames processed
+372/1705 frames processed
+373/1705 frames processed
+374/1705 frames processed
+375/1705 frames processed
+376/1705 frames processed
+377/1705 frames processed
+378/1705 frames processed
+379/1705 frames processed
+380/1705 frames processed
+381/1705 frames processed
+382/1705 frames processed
+383/1705 frames processed
+384/1705 frames processed
+385/1705 frames processed
+386/1705 frames processed
+387/1705 frames processed
+388/1705 frames processed
+389/1705 frames processed
+390/1705 frames processed
+391/1705 frames processed
+392/1705 frames processed
+393/1705 frames processed
+394/1705 frames processed
+395/1705 frames processed
+396/1705 frames processed
+397/1705 frames processed
+398/1705 frames processed
+399/1705 frames processed
+400/1705 frames processed
+401/1705 frames processed
+402/1705 frames processed
+403/1705 frames processed
+404/1705 frames processed
+405/1705 frames processed
+406/1705 frames processed
+407/1705 frames processed
+408/1705 frames processed
+409/1705 frames processed
+410/1705 frames processed
+411/1705 frames processed
+412/1705 frames processed
+413/1705 frames processed
+414/1705 frames processed
+415/1705 frames processed
+416/1705 frames processed
+417/1705 frames processed
+418/1705 frames processed
+419/1705 frames processed
+420/1705 frames processed
+421/1705 frames processed
+422/1705 frames processed
+423/1705 frames processed
+424/1705 frames processed
+425/1705 frames processed
+426/1705 frames processed
+427/1705 frames processed
+428/1705 frames processed
+429/1705 frames processed
+430/1705 frames processed
+431/1705 frames processed
+432/1705 frames processed
+433/1705 frames processed
+434/1705 frames processed
+435/1705 frames processed
+436/1705 frames processed
+437/1705 frames processed
+438/1705 frames processed
+439/1705 frames processed
+440/1705 frames processed
+441/1705 frames processed
+442/1705 frames processed
+443/1705 frames processed
+444/1705 frames processed
+445/1705 frames processed
+446/1705 frames processed
+447/1705 frames processed
+448/1705 frames processed
+449/1705 frames processed
+450/1705 frames processed
+451/1705 frames processed
+452/1705 frames processed
+453/1705 frames processed
+454/1705 frames processed
+455/1705 frames processed
+456/1705 frames processed
+457/1705 frames processed
+458/1705 frames processed
+459/1705 frames processed
+460/1705 frames processed
+461/1705 frames processed
+462/1705 frames processed
+463/1705 frames processed
+464/1705 frames processed
+465/1705 frames processed
+466/1705 frames processed
+467/1705 frames processed
+468/1705 frames processed
+469/1705 frames processed
+470/1705 frames processed
+471/1705 frames processed
+472/1705 frames processed
+473/1705 frames processed
+474/1705 frames processed
+475/1705 frames processed
+476/1705 frames processed
+477/1705 frames processed
+478/1705 frames processed
+479/1705 frames processed
+480/1705 frames processed
+481/1705 frames processed
+482/1705 frames processed
+483/1705 frames processed
+484/1705 frames processed
+485/1705 frames processed
+486/1705 frames processed
+487/1705 frames processed
+488/1705 frames processed
+489/1705 frames processed
+490/1705 frames processed
+491/1705 frames processed
+492/1705 frames processed
+493/1705 frames processed
+494/1705 frames processed
+495/1705 frames processed
+496/1705 frames processed
+497/1705 frames processed
+498/1705 frames processed
+499/1705 frames processed
+500/1705 frames processed
+501/1705 frames processed
+502/1705 frames processed
+503/1705 frames processed
+504/1705 frames processed
+505/1705 frames processed
+506/1705 frames processed
+507/1705 frames processed
+508/1705 frames processed
+509/1705 frames processed
+510/1705 frames processed
+511/1705 frames processed
+512/1705 frames processed
+513/1705 frames processed
+514/1705 frames processed
+515/1705 frames processed
+516/1705 frames processed
+517/1705 frames processed
+518/1705 frames processed
+519/1705 frames processed
+520/1705 frames processed
+521/1705 frames processed
+522/1705 frames processed
+523/1705 frames processed
+524/1705 frames processed
+525/1705 frames processed
+526/1705 frames processed
+527/1705 frames processed
+528/1705 frames processed
+529/1705 frames processed
+530/1705 frames processed
+531/1705 frames processed
+532/1705 frames processed
+533/1705 frames processed
+534/1705 frames processed
+535/1705 frames processed
+536/1705 frames processed
+537/1705 frames processed
+538/1705 frames processed
+539/1705 frames processed
+540/1705 frames processed
+541/1705 frames processed
+542/1705 frames processed
+543/1705 frames processed
+544/1705 frames processed
+545/1705 frames processed
+546/1705 frames processed
+547/1705 frames processed
+548/1705 frames processed
+549/1705 frames processed
+550/1705 frames processed
+551/1705 frames processed
+552/1705 frames processed
+553/1705 frames processed
+554/1705 frames processed
+555/1705 frames processed
+556/1705 frames processed
+557/1705 frames processed
+558/1705 frames processed
+559/1705 frames processed
+560/1705 frames processed
+561/1705 frames processed
+562/1705 frames processed
+563/1705 frames processed
+564/1705 frames processed
+565/1705 frames processed
+566/1705 frames processed
+567/1705 frames processed
+568/1705 frames processed
+569/1705 frames processed
+570/1705 frames processed
+571/1705 frames processed
+572/1705 frames processed
+573/1705 frames processed
+574/1705 frames processed
+575/1705 frames processed
+576/1705 frames processed
+577/1705 frames processed
+578/1705 frames processed
+579/1705 frames processed
+580/1705 frames processed
+581/1705 frames processed
+582/1705 frames processed
+583/1705 frames processed
+584/1705 frames processed
+585/1705 frames processed
+586/1705 frames processed
+587/1705 frames processed
+588/1705 frames processed
+589/1705 frames processed
+590/1705 frames processed
+591/1705 frames processed
+592/1705 frames processed
+593/1705 frames processed
+594/1705 frames processed
+595/1705 frames processed
+596/1705 frames processed
+597/1705 frames processed
+598/1705 frames processed
+599/1705 frames processed
+600/1705 frames processed
+601/1705 frames processed
+602/1705 frames processed
+603/1705 frames processed
+604/1705 frames processed
+605/1705 frames processed
+606/1705 frames processed
+607/1705 frames processed
+608/1705 frames processed
+609/1705 frames processed
+610/1705 frames processed
+611/1705 frames processed
+612/1705 frames processed
+613/1705 frames processed
+614/1705 frames processed
+615/1705 frames processed
+616/1705 frames processed
+617/1705 frames processed
+618/1705 frames processed
+619/1705 frames processed
+620/1705 frames processed
+621/1705 frames processed
+622/1705 frames processed
+623/1705 frames processed
+624/1705 frames processed
+625/1705 frames processed
+626/1705 frames processed
+627/1705 frames processed
+628/1705 frames processed
+629/1705 frames processed
+630/1705 frames processed
+631/1705 frames processed
+632/1705 frames processed
+633/1705 frames processed
+634/1705 frames processed
+635/1705 frames processed
+636/1705 frames processed
+637/1705 frames processed
+638/1705 frames processed
+639/1705 frames processed
+640/1705 frames processed
+641/1705 frames processed
+642/1705 frames processed
+643/1705 frames processed
+644/1705 frames processed
+645/1705 frames processed
+646/1705 frames processed
+647/1705 frames processed
+648/1705 frames processed
+649/1705 frames processed
+650/1705 frames processed
+651/1705 frames processed
+652/1705 frames processed
+653/1705 frames processed
+654/1705 frames processed
+655/1705 frames processed
+656/1705 frames processed
+657/1705 frames processed
+658/1705 frames processed
+659/1705 frames processed
+660/1705 frames processed
+661/1705 frames processed
+662/1705 frames processed
+663/1705 frames processed
+664/1705 frames processed
+665/1705 frames processed
+666/1705 frames processed
+667/1705 frames processed
+668/1705 frames processed
+669/1705 frames processed
+670/1705 frames processed
+671/1705 frames processed
+672/1705 frames processed
+673/1705 frames processed
+674/1705 frames processed
+675/1705 frames processed
+676/1705 frames processed
+677/1705 frames processed
+678/1705 frames processed
+679/1705 frames processed
+680/1705 frames processed
+681/1705 frames processed
+682/1705 frames processed
+683/1705 frames processed
+684/1705 frames processed
+685/1705 frames processed
+686/1705 frames processed
+687/1705 frames processed
+688/1705 frames processed
+689/1705 frames processed
+690/1705 frames processed
+691/1705 frames processed
+692/1705 frames processed
+693/1705 frames processed
+694/1705 frames processed
+695/1705 frames processed
+696/1705 frames processed
+697/1705 frames processed
+698/1705 frames processed
+699/1705 frames processed
+700/1705 frames processed
+701/1705 frames processed
+702/1705 frames processed
+703/1705 frames processed
+704/1705 frames processed
+705/1705 frames processed
+706/1705 frames processed
+707/1705 frames processed
+708/1705 frames processed
+709/1705 frames processed
+710/1705 frames processed
+711/1705 frames processed
+712/1705 frames processed
+713/1705 frames processed
+714/1705 frames processed
+715/1705 frames processed
+716/1705 frames processed
+717/1705 frames processed
+718/1705 frames processed
+719/1705 frames processed
+720/1705 frames processed
+721/1705 frames processed
+722/1705 frames processed
+723/1705 frames processed
+724/1705 frames processed
+725/1705 frames processed
+726/1705 frames processed
+727/1705 frames processed
+728/1705 frames processed
+729/1705 frames processed
+730/1705 frames processed
+731/1705 frames processed
+732/1705 frames processed
+733/1705 frames processed
+734/1705 frames processed
+735/1705 frames processed
+736/1705 frames processed
+737/1705 frames processed
+738/1705 frames processed
+739/1705 frames processed
+740/1705 frames processed
+741/1705 frames processed
+742/1705 frames processed
+743/1705 frames processed
+744/1705 frames processed
+745/1705 frames processed
+746/1705 frames processed
+747/1705 frames processed
+748/1705 frames processed
+749/1705 frames processed
+750/1705 frames processed
+751/1705 frames processed
+752/1705 frames processed
+753/1705 frames processed
+754/1705 frames processed
+755/1705 frames processed
+756/1705 frames processed
+757/1705 frames processed
+758/1705 frames processed
+759/1705 frames processed
+760/1705 frames processed
+761/1705 frames processed
+762/1705 frames processed
+763/1705 frames processed
+764/1705 frames processed
+765/1705 frames processed
+766/1705 frames processed
+767/1705 frames processed
+768/1705 frames processed
+769/1705 frames processed
+770/1705 frames processed
+771/1705 frames processed
+772/1705 frames processed
+773/1705 frames processed
+774/1705 frames processed
+775/1705 frames processed
+776/1705 frames processed
+777/1705 frames processed
+778/1705 frames processed
+779/1705 frames processed
+780/1705 frames processed
+781/1705 frames processed
+782/1705 frames processed
+783/1705 frames processed
+784/1705 frames processed
+785/1705 frames processed
+786/1705 frames processed
+787/1705 frames processed
+788/1705 frames processed
+789/1705 frames processed
+790/1705 frames processed
+791/1705 frames processed
+792/1705 frames processed
+793/1705 frames processed
+794/1705 frames processed
+795/1705 frames processed
+796/1705 frames processed
+797/1705 frames processed
+798/1705 frames processed
+799/1705 frames processed
+800/1705 frames processed
+801/1705 frames processed
+802/1705 frames processed
+803/1705 frames processed
+804/1705 frames processed
+805/1705 frames processed
+806/1705 frames processed
+807/1705 frames processed
+808/1705 frames processed
+809/1705 frames processed
+810/1705 frames processed
+811/1705 frames processed
+812/1705 frames processed
+813/1705 frames processed
+814/1705 frames processed
+815/1705 frames processed
+816/1705 frames processed
+817/1705 frames processed
+818/1705 frames processed
+819/1705 frames processed
+820/1705 frames processed
+821/1705 frames processed
+822/1705 frames processed
+823/1705 frames processed
+824/1705 frames processed
+825/1705 frames processed
+826/1705 frames processed
+827/1705 frames processed
+828/1705 frames processed
+829/1705 frames processed
+830/1705 frames processed
+831/1705 frames processed
+832/1705 frames processed
+833/1705 frames processed
+834/1705 frames processed
+835/1705 frames processed
+836/1705 frames processed
+837/1705 frames processed
+838/1705 frames processed
+839/1705 frames processed
+840/1705 frames processed
+841/1705 frames processed
+842/1705 frames processed
+843/1705 frames processed
+844/1705 frames processed
+845/1705 frames processed
+846/1705 frames processed
+847/1705 frames processed
+848/1705 frames processed
+849/1705 frames processed
+850/1705 frames processed
+851/1705 frames processed
+852/1705 frames processed
+853/1705 frames processed
+854/1705 frames processed
+855/1705 frames processed
+856/1705 frames processed
+857/1705 frames processed
+858/1705 frames processed
+859/1705 frames processed
+860/1705 frames processed
+861/1705 frames processed
+862/1705 frames processed
+863/1705 frames processed
+864/1705 frames processed
+865/1705 frames processed
+866/1705 frames processed
+867/1705 frames processed
+868/1705 frames processed
+869/1705 frames processed
+870/1705 frames processed
+871/1705 frames processed
+872/1705 frames processed
+873/1705 frames processed
+874/1705 frames processed
+875/1705 frames processed
+876/1705 frames processed
+877/1705 frames processed
+878/1705 frames processed
+879/1705 frames processed
+880/1705 frames processed
+881/1705 frames processed
+882/1705 frames processed
+883/1705 frames processed
+884/1705 frames processed
+885/1705 frames processed
+886/1705 frames processed
+887/1705 frames processed
+888/1705 frames processed
+889/1705 frames processed
+890/1705 frames processed
+891/1705 frames processed
+892/1705 frames processed
+893/1705 frames processed
+894/1705 frames processed
+895/1705 frames processed
+896/1705 frames processed
+897/1705 frames processed
+898/1705 frames processed
+899/1705 frames processed
+900/1705 frames processed
+901/1705 frames processed
+902/1705 frames processed
+903/1705 frames processed
+904/1705 frames processed
+905/1705 frames processed
+906/1705 frames processed
+907/1705 frames processed
+908/1705 frames processed
+909/1705 frames processed
+910/1705 frames processed
+911/1705 frames processed
+912/1705 frames processed
+913/1705 frames processed
+914/1705 frames processed
+915/1705 frames processed
+916/1705 frames processed
+917/1705 frames processed
+918/1705 frames processed
+919/1705 frames processed
+920/1705 frames processed
+921/1705 frames processed
+922/1705 frames processed
+923/1705 frames processed
+924/1705 frames processed
+925/1705 frames processed
+926/1705 frames processed
+927/1705 frames processed
+928/1705 frames processed
+929/1705 frames processed
+930/1705 frames processed
+931/1705 frames processed
+932/1705 frames processed
+933/1705 frames processed
+934/1705 frames processed
+935/1705 frames processed
+936/1705 frames processed
+937/1705 frames processed
+938/1705 frames processed
+939/1705 frames processed
+940/1705 frames processed
+941/1705 frames processed
+942/1705 frames processed
+943/1705 frames processed
+944/1705 frames processed
+945/1705 frames processed
+946/1705 frames processed
+947/1705 frames processed
+948/1705 frames processed
+949/1705 frames processed
+950/1705 frames processed
+951/1705 frames processed
+952/1705 frames processed
+953/1705 frames processed
+954/1705 frames processed
+955/1705 frames processed
+956/1705 frames processed
+957/1705 frames processed
+958/1705 frames processed
+959/1705 frames processed
+960/1705 frames processed
+961/1705 frames processed
+962/1705 frames processed
+963/1705 frames processed
+964/1705 frames processed
+965/1705 frames processed
+966/1705 frames processed
+967/1705 frames processed
+968/1705 frames processed
+969/1705 frames processed
+970/1705 frames processed
+971/1705 frames processed
+972/1705 frames processed
+973/1705 frames processed
+974/1705 frames processed
+975/1705 frames processed
+976/1705 frames processed
+977/1705 frames processed
+978/1705 frames processed
+979/1705 frames processed
+980/1705 frames processed
+981/1705 frames processed
+982/1705 frames processed
+983/1705 frames processed
+984/1705 frames processed
+985/1705 frames processed
+986/1705 frames processed
+987/1705 frames processed
+988/1705 frames processed
+989/1705 frames processed
+990/1705 frames processed
+991/1705 frames processed
+992/1705 frames processed
+993/1705 frames processed
+994/1705 frames processed
+995/1705 frames processed
+996/1705 frames processed
+997/1705 frames processed
+998/1705 frames processed
+999/1705 frames processed
+1000/1705 frames processed
+1001/1705 frames processed
+1002/1705 frames processed
+1003/1705 frames processed
+1004/1705 frames processed
+1005/1705 frames processed
+1006/1705 frames processed
+1007/1705 frames processed
+1008/1705 frames processed
+1009/1705 frames processed
+1010/1705 frames processed
+1011/1705 frames processed
+1012/1705 frames processed
+1013/1705 frames processed
+1014/1705 frames processed
+1015/1705 frames processed
+1016/1705 frames processed
+1017/1705 frames processed
+1018/1705 frames processed
+1019/1705 frames processed
+1020/1705 frames processed
+1021/1705 frames processed
+1022/1705 frames processed
+1023/1705 frames processed
+1024/1705 frames processed
+1025/1705 frames processed
+1026/1705 frames processed
+1027/1705 frames processed
+1028/1705 frames processed
+1029/1705 frames processed
+1030/1705 frames processed
+1031/1705 frames processed
+1032/1705 frames processed
+1033/1705 frames processed
+1034/1705 frames processed
+1035/1705 frames processed
+1036/1705 frames processed
+1037/1705 frames processed
+1038/1705 frames processed
+1039/1705 frames processed
+1040/1705 frames processed
+1041/1705 frames processed
+1042/1705 frames processed
+1043/1705 frames processed
+1044/1705 frames processed
+1045/1705 frames processed
+1046/1705 frames processed
+1047/1705 frames processed
+1048/1705 frames processed
+1049/1705 frames processed
+1050/1705 frames processed
+1051/1705 frames processed
+1052/1705 frames processed
+1053/1705 frames processed
+1054/1705 frames processed
+1055/1705 frames processed
+1056/1705 frames processed
+1057/1705 frames processed
+1058/1705 frames processed
+1059/1705 frames processed
+1060/1705 frames processed
+1061/1705 frames processed
+1062/1705 frames processed
+1063/1705 frames processed
+1064/1705 frames processed
+1065/1705 frames processed
+1066/1705 frames processed
+1067/1705 frames processed
+1068/1705 frames processed
+1069/1705 frames processed
+1070/1705 frames processed
+1071/1705 frames processed
+1072/1705 frames processed
+1073/1705 frames processed
+1074/1705 frames processed
+1075/1705 frames processed
+1076/1705 frames processed
+1077/1705 frames processed
+1078/1705 frames processed
+1079/1705 frames processed
+1080/1705 frames processed
+1081/1705 frames processed
+1082/1705 frames processed
+1083/1705 frames processed
+1084/1705 frames processed
+1085/1705 frames processed
+1086/1705 frames processed
+1087/1705 frames processed
+1088/1705 frames processed
+1089/1705 frames processed
+1090/1705 frames processed
+1091/1705 frames processed
+1092/1705 frames processed
+1093/1705 frames processed
+1094/1705 frames processed
+1095/1705 frames processed
+1096/1705 frames processed
+1097/1705 frames processed
+1098/1705 frames processed
+1099/1705 frames processed
+1100/1705 frames processed
+1101/1705 frames processed
+1102/1705 frames processed
+1103/1705 frames processed
+1104/1705 frames processed
+1105/1705 frames processed
+1106/1705 frames processed
+1107/1705 frames processed
+1108/1705 frames processed
+1109/1705 frames processed
+1110/1705 frames processed
+1111/1705 frames processed
+1112/1705 frames processed
+1113/1705 frames processed
+1114/1705 frames processed
+1115/1705 frames processed
+1116/1705 frames processed
+1117/1705 frames processed
+1118/1705 frames processed
+1119/1705 frames processed
+1120/1705 frames processed
+1121/1705 frames processed
+1122/1705 frames processed
+1123/1705 frames processed
+1124/1705 frames processed
+1125/1705 frames processed
+1126/1705 frames processed
+1127/1705 frames processed
+1128/1705 frames processed
+1129/1705 frames processed
+1130/1705 frames processed
+1131/1705 frames processed
+1132/1705 frames processed
+1133/1705 frames processed
+1134/1705 frames processed
+1135/1705 frames processed
+1136/1705 frames processed
+1137/1705 frames processed
+1138/1705 frames processed
+1139/1705 frames processed
+1140/1705 frames processed
+1141/1705 frames processed
+1142/1705 frames processed
+1143/1705 frames processed
+1144/1705 frames processed
+1145/1705 frames processed
+1146/1705 frames processed
+1147/1705 frames processed
+1148/1705 frames processed
+1149/1705 frames processed
+1150/1705 frames processed
+1151/1705 frames processed
+1152/1705 frames processed
+1153/1705 frames processed
+1154/1705 frames processed
+1155/1705 frames processed
+1156/1705 frames processed
+1157/1705 frames processed
+1158/1705 frames processed
+1159/1705 frames processed
+1160/1705 frames processed
+1161/1705 frames processed
+1162/1705 frames processed
+1163/1705 frames processed
+1164/1705 frames processed
+1165/1705 frames processed
+1166/1705 frames processed
+1167/1705 frames processed
+1168/1705 frames processed
+1169/1705 frames processed
+1170/1705 frames processed
+1171/1705 frames processed
+1172/1705 frames processed
+1173/1705 frames processed
+1174/1705 frames processed
+1175/1705 frames processed
+1176/1705 frames processed
+1177/1705 frames processed
+1178/1705 frames processed
+1179/1705 frames processed
+1180/1705 frames processed
+1181/1705 frames processed
+1182/1705 frames processed
+1183/1705 frames processed
+1184/1705 frames processed
+1185/1705 frames processed
+1186/1705 frames processed
+1187/1705 frames processed
+1188/1705 frames processed
+1189/1705 frames processed
+1190/1705 frames processed
+1191/1705 frames processed
+1192/1705 frames processed
+1193/1705 frames processed
+1194/1705 frames processed
+1195/1705 frames processed
+1196/1705 frames processed
+1197/1705 frames processed
+1198/1705 frames processed
+1199/1705 frames processed
+1200/1705 frames processed
+1201/1705 frames processed
+1202/1705 frames processed
+1203/1705 frames processed
+1204/1705 frames processed
+1205/1705 frames processed
+1206/1705 frames processed
+1207/1705 frames processed
+1208/1705 frames processed
+1209/1705 frames processed
+1210/1705 frames processed
+1211/1705 frames processed
+1212/1705 frames processed
+1213/1705 frames processed
+1214/1705 frames processed
+1215/1705 frames processed
+1216/1705 frames processed
+1217/1705 frames processed
+1218/1705 frames processed
+1219/1705 frames processed
+1220/1705 frames processed
+1221/1705 frames processed
+1222/1705 frames processed
+1223/1705 frames processed
+1224/1705 frames processed
+1225/1705 frames processed
+1226/1705 frames processed
+1227/1705 frames processed
+1228/1705 frames processed
+1229/1705 frames processed
+1230/1705 frames processed
+1231/1705 frames processed
+1232/1705 frames processed
+1233/1705 frames processed
+1234/1705 frames processed
+1235/1705 frames processed
+1236/1705 frames processed
+1237/1705 frames processed
+1238/1705 frames processed
+1239/1705 frames processed
+1240/1705 frames processed
+1241/1705 frames processed
+1242/1705 frames processed
+1243/1705 frames processed
+1244/1705 frames processed
+1245/1705 frames processed
+1246/1705 frames processed
+1247/1705 frames processed
+1248/1705 frames processed
+1249/1705 frames processed
+1250/1705 frames processed
+1251/1705 frames processed
+1252/1705 frames processed
+1253/1705 frames processed
+1254/1705 frames processed
+1255/1705 frames processed
+1256/1705 frames processed
+1257/1705 frames processed
+1258/1705 frames processed
+1259/1705 frames processed
+1260/1705 frames processed
+1261/1705 frames processed
+1262/1705 frames processed
+1263/1705 frames processed
+1264/1705 frames processed
+1265/1705 frames processed
+1266/1705 frames processed
+1267/1705 frames processed
+1268/1705 frames processed
+1269/1705 frames processed
+1270/1705 frames processed
+1271/1705 frames processed
+1272/1705 frames processed
+1273/1705 frames processed
+1274/1705 frames processed
+1275/1705 frames processed
+1276/1705 frames processed
+1277/1705 frames processed
+1278/1705 frames processed
+1279/1705 frames processed
+1280/1705 frames processed
+1281/1705 frames processed
+1282/1705 frames processed
+1283/1705 frames processed
+1284/1705 frames processed
+1285/1705 frames processed
+1286/1705 frames processed
+1287/1705 frames processed
+1288/1705 frames processed
+1289/1705 frames processed
+1290/1705 frames processed
+1291/1705 frames processed
+1292/1705 frames processed
+1293/1705 frames processed
+1294/1705 frames processed
+1295/1705 frames processed
+1296/1705 frames processed
+1297/1705 frames processed
+1298/1705 frames processed
+1299/1705 frames processed
+1300/1705 frames processed
+1301/1705 frames processed
+1302/1705 frames processed
+1303/1705 frames processed
+1304/1705 frames processed
+1305/1705 frames processed
+1306/1705 frames processed
+1307/1705 frames processed
+1308/1705 frames processed
+1309/1705 frames processed
+1310/1705 frames processed
+1311/1705 frames processed
+1312/1705 frames processed
+1313/1705 frames processed
+1314/1705 frames processed
+1315/1705 frames processed
+1316/1705 frames processed
+1317/1705 frames processed
+1318/1705 frames processed
+1319/1705 frames processed
+1320/1705 frames processed
+1321/1705 frames processed
+1322/1705 frames processed
+1323/1705 frames processed
+1324/1705 frames processed
+1325/1705 frames processed
+1326/1705 frames processed
+1327/1705 frames processed
+1328/1705 frames processed
+1329/1705 frames processed
+1330/1705 frames processed
+1331/1705 frames processed
+1332/1705 frames processed
+1333/1705 frames processed
+1334/1705 frames processed
+1335/1705 frames processed
+1336/1705 frames processed
+1337/1705 frames processed
+1338/1705 frames processed
+1339/1705 frames processed
+1340/1705 frames processed
+1341/1705 frames processed
+1342/1705 frames processed
+1343/1705 frames processed
+1344/1705 frames processed
+1345/1705 frames processed
+1346/1705 frames processed
+1347/1705 frames processed
+1348/1705 frames processed
+1349/1705 frames processed
+1350/1705 frames processed
+1351/1705 frames processed
+1352/1705 frames processed
+1353/1705 frames processed
+1354/1705 frames processed
+1355/1705 frames processed
+1356/1705 frames processed
+1357/1705 frames processed
+1358/1705 frames processed
+1359/1705 frames processed
+1360/1705 frames processed
+1361/1705 frames processed
+1362/1705 frames processed
+1363/1705 frames processed
+1364/1705 frames processed
+1365/1705 frames processed
+1366/1705 frames processed
+1367/1705 frames processed
+1368/1705 frames processed
+1369/1705 frames processed
+1370/1705 frames processed
+1371/1705 frames processed
+1372/1705 frames processed
+1373/1705 frames processed
+1374/1705 frames processed
+1375/1705 frames processed
+1376/1705 frames processed
+1377/1705 frames processed
+1378/1705 frames processed
+1379/1705 frames processed
+1380/1705 frames processed
+1381/1705 frames processed
+1382/1705 frames processed
+1383/1705 frames processed
+1384/1705 frames processed
+1385/1705 frames processed
+1386/1705 frames processed
+1387/1705 frames processed
+1388/1705 frames processed
+1389/1705 frames processed
+1390/1705 frames processed
+1391/1705 frames processed
+1392/1705 frames processed
+1393/1705 frames processed
+1394/1705 frames processed
+1395/1705 frames processed
+1396/1705 frames processed
+1397/1705 frames processed
+1398/1705 frames processed
+1399/1705 frames processed
+1400/1705 frames processed
+1401/1705 frames processed
+1402/1705 frames processed
+1403/1705 frames processed
+1404/1705 frames processed
+1405/1705 frames processed
+1406/1705 frames processed
+1407/1705 frames processed
+1408/1705 frames processed
+1409/1705 frames processed
+1410/1705 frames processed
+1411/1705 frames processed
+1412/1705 frames processed
+1413/1705 frames processed
+1414/1705 frames processed
+1415/1705 frames processed
+1416/1705 frames processed
+1417/1705 frames processed
+1418/1705 frames processed
+1419/1705 frames processed
+1420/1705 frames processed
+1421/1705 frames processed
+1422/1705 frames processed
+1423/1705 frames processed
+1424/1705 frames processed
+1425/1705 frames processed
+1426/1705 frames processed
+1427/1705 frames processed
+1428/1705 frames processed
+1429/1705 frames processed
+1430/1705 frames processed
+1431/1705 frames processed
+1432/1705 frames processed
+1433/1705 frames processed
+1434/1705 frames processed
+1435/1705 frames processed
+1436/1705 frames processed
+1437/1705 frames processed
+1438/1705 frames processed
+1439/1705 frames processed
+1440/1705 frames processed
+1441/1705 frames processed
+1442/1705 frames processed
+1443/1705 frames processed
+1444/1705 frames processed
+1445/1705 frames processed
+1446/1705 frames processed
+1447/1705 frames processed
+1448/1705 frames processed
+1449/1705 frames processed
+1450/1705 frames processed
+1451/1705 frames processed
+1452/1705 frames processed
+1453/1705 frames processed
+1454/1705 frames processed
+1455/1705 frames processed
+1456/1705 frames processed
+1457/1705 frames processed
+1458/1705 frames processed
+1459/1705 frames processed
+1460/1705 frames processed
+1461/1705 frames processed
+1462/1705 frames processed
+1463/1705 frames processed
+1464/1705 frames processed
+1465/1705 frames processed
+1466/1705 frames processed
+1467/1705 frames processed
+1468/1705 frames processed
+1469/1705 frames processed
+1470/1705 frames processed
+1471/1705 frames processed
+1472/1705 frames processed
+1473/1705 frames processed
+1474/1705 frames processed
+1475/1705 frames processed
+1476/1705 frames processed
+1477/1705 frames processed
+1478/1705 frames processed
+1479/1705 frames processed
+1480/1705 frames processed
+1481/1705 frames processed
+1482/1705 frames processed
+1483/1705 frames processed
+1484/1705 frames processed
+1485/1705 frames processed
+1486/1705 frames processed
+1487/1705 frames processed
+1488/1705 frames processed
+1489/1705 frames processed
+1490/1705 frames processed
+1491/1705 frames processed
+1492/1705 frames processed
+1493/1705 frames processed
+1494/1705 frames processed
+1495/1705 frames processed
+1496/1705 frames processed
+1497/1705 frames processed
+1498/1705 frames processed
+1499/1705 frames processed
+1500/1705 frames processed
+1501/1705 frames processed
+1502/1705 frames processed
+1503/1705 frames processed
+1504/1705 frames processed
+1505/1705 frames processed
+1506/1705 frames processed
+1507/1705 frames processed
+1508/1705 frames processed
+1509/1705 frames processed
+1510/1705 frames processed
+1511/1705 frames processed
+1512/1705 frames processed
+1513/1705 frames processed
+1514/1705 frames processed
+1515/1705 frames processed
+1516/1705 frames processed
+1517/1705 frames processed
+1518/1705 frames processed
+1519/1705 frames processed
+1520/1705 frames processed
+1521/1705 frames processed
+1522/1705 frames processed
+1523/1705 frames processed
+1524/1705 frames processed
+1525/1705 frames processed
+1526/1705 frames processed
+1527/1705 frames processed
+1528/1705 frames processed
+1529/1705 frames processed
+1530/1705 frames processed
+1531/1705 frames processed
+1532/1705 frames processed
+1533/1705 frames processed
+1534/1705 frames processed
+1535/1705 frames processed
+1536/1705 frames processed
+1537/1705 frames processed
+1538/1705 frames processed
+1539/1705 frames processed
+1540/1705 frames processed
+1541/1705 frames processed
+1542/1705 frames processed
+1543/1705 frames processed
+1544/1705 frames processed
+1545/1705 frames processed
+1546/1705 frames processed
+1547/1705 frames processed
+1548/1705 frames processed
+1549/1705 frames processed
+1550/1705 frames processed
+1551/1705 frames processed
+1552/1705 frames processed
+1553/1705 frames processed
+1554/1705 frames processed
+1555/1705 frames processed
+1556/1705 frames processed
+1557/1705 frames processed
+1558/1705 frames processed
+1559/1705 frames processed
+1560/1705 frames processed
+1561/1705 frames processed
+1562/1705 frames processed
+1563/1705 frames processed
+1564/1705 frames processed
+1565/1705 frames processed
+1566/1705 frames processed
+1567/1705 frames processed
+1568/1705 frames processed
+1569/1705 frames processed
+1570/1705 frames processed
+1571/1705 frames processed
+1572/1705 frames processed
+1573/1705 frames processed
+1574/1705 frames processed
+1575/1705 frames processed
+1576/1705 frames processed
+1577/1705 frames processed
+1578/1705 frames processed
+1579/1705 frames processed
+1580/1705 frames processed
+1581/1705 frames processed
+1582/1705 frames processed
+1583/1705 frames processed
+1584/1705 frames processed
+1585/1705 frames processed
+1586/1705 frames processed
+1587/1705 frames processed
+1588/1705 frames processed
+1589/1705 frames processed
+1590/1705 frames processed
+1591/1705 frames processed
+1592/1705 frames processed
+1593/1705 frames processed
+1594/1705 frames processed
+1595/1705 frames processed
+1596/1705 frames processed
+1597/1705 frames processed
+1598/1705 frames processed
+1599/1705 frames processed
+1600/1705 frames processed
+1601/1705 frames processed
+1602/1705 frames processed
+1603/1705 frames processed
+1604/1705 frames processed
+1605/1705 frames processed
+1606/1705 frames processed
+1607/1705 frames processed
+1608/1705 frames processed
+1609/1705 frames processed
+1610/1705 frames processed
+1611/1705 frames processed
+1612/1705 frames processed
+1613/1705 frames processed
+1614/1705 frames processed
+1615/1705 frames processed
+1616/1705 frames processed
+1617/1705 frames processed
+1618/1705 frames processed
+1619/1705 frames processed
+1620/1705 frames processed
+1621/1705 frames processed
+1622/1705 frames processed
+1623/1705 frames processed
+1624/1705 frames processed
+1625/1705 frames processed
+1626/1705 frames processed
+1627/1705 frames processed
+1628/1705 frames processed
+1629/1705 frames processed
+1630/1705 frames processed
+1631/1705 frames processed
+1632/1705 frames processed
+1633/1705 frames processed
+1634/1705 frames processed
+1635/1705 frames processed
+1636/1705 frames processed
+1637/1705 frames processed
+1638/1705 frames processed
+1639/1705 frames processed
+1640/1705 frames processed
+1641/1705 frames processed
+1642/1705 frames processed
+1643/1705 frames processed
+1644/1705 frames processed
+1645/1705 frames processed
+1646/1705 frames processed
+1647/1705 frames processed
+1648/1705 frames processed
+1649/1705 frames processed
+1650/1705 frames processed
+1651/1705 frames processed
+1652/1705 frames processed
+1653/1705 frames processed
+1654/1705 frames processed
+1655/1705 frames processed
+1656/1705 frames processed
+1657/1705 frames processed
+1658/1705 frames processed
+1659/1705 frames processed
+1660/1705 frames processed
+1661/1705 frames processed
+1662/1705 frames processed
+1663/1705 frames processed
+1664/1705 frames processed
+1665/1705 frames processed
+1666/1705 frames processed
+1667/1705 frames processed
+1668/1705 frames processed
+1669/1705 frames processed
+1670/1705 frames processed
+1671/1705 frames processed
+1672/1705 frames processed
+1673/1705 frames processed
+1674/1705 frames processed
+1675/1705 frames processed
+1676/1705 frames processed
+1677/1705 frames processed
+1678/1705 frames processed
+1679/1705 frames processed
+1680/1705 frames processed
+1681/1705 frames processed
+1682/1705 frames processed
+1683/1705 frames processed
+1684/1705 frames processed
+1685/1705 frames processed
+1686/1705 frames processed
+1687/1705 frames processed
+1688/1705 frames processed
+1689/1705 frames processed
+1690/1705 frames processed
+1691/1705 frames processed
+1692/1705 frames processed
+1693/1705 frames processed
+1694/1705 frames processed
+1695/1705 frames processed
+1696/1705 frames processed
+1697/1705 frames processed
+1698/1705 frames processed
+1699/1705 frames processed
+1700/1705 frames processed
+1701/1705 frames processed
+1702/1705 frames processed
+1703/1705 frames processed
+1704/1705 frames processed
+1705/1705 frames processed
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">IPython.display</span> <span class="kn">import</span> <span class="n">HTML</span>
+<span class="kn">from</span> <span class="nn">base64</span> <span class="kn">import</span> <span class="n">b64encode</span>
+<span class="kn">import</span> <span class="nn">os</span>
+
+<span class="c1"># Input video path</span>
+<span class="n">save_path</span> <span class="o">=</span> <span class="s1">&#39;/content/gdrive/MyDrive/DeepLearning/YoloV7/yolov7/output.mp4&#39;</span>
+
+<span class="c1"># Compressed video path</span>
+<span class="n">compressed_path</span> <span class="o">=</span> <span class="s2">&quot;/content/gdrive/MyDrive/DeepLearning/YoloV7/yolov7/result_compressed.mp4&quot;</span>
+
+<span class="n">os</span><span class="o">.</span><span class="n">system</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;ffmpeg -i </span><span class="si">{</span><span class="n">save_path</span><span class="si">}</span><span class="s2"> -vcodec libx264 </span><span class="si">{</span><span class="n">compressed_path</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+<span class="c1"># Show video</span>
+<span class="n">mp4</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">compressed_path</span><span class="p">,</span><span class="s1">&#39;rb&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+<span class="n">data_url</span> <span class="o">=</span> <span class="s2">&quot;data:video/mp4;base64,&quot;</span> <span class="o">+</span> <span class="n">b64encode</span><span class="p">(</span><span class="n">mp4</span><span class="p">)</span><span class="o">.</span><span class="n">decode</span><span class="p">()</span>
+<span class="n">HTML</span><span class="p">(</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">&lt;video width=400 controls&gt;</span>
+<span class="s2">      &lt;source src=&quot;</span><span class="si">%s</span><span class="s2">&quot; type=&quot;video/mp4&quot;&gt;</span>
+<span class="s2">&lt;/video&gt;</span>
+<span class="s2">&quot;&quot;&quot;</span> <span class="o">%</span> <span class="n">data_url</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Output hidden; open in https://colab.research.google.com to view.
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./."
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer">
+                  <!-- Previous / next buttons -->
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="intro.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Welcome to your Jupyter Book</p>
+      </div>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#menghubungkan-collab">1.1 Menghubungkan Collab</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#install-requirement-yolov7">1.2 Install Requirement YoloV7</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#import-dataset">1.3 Import Dataset</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#download-weight-yolov7">1.4 Download Weight YoloV7</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#training-model-yolov7">1.5 Training Model YoloV7</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#evaluasi-model">1.6 Evaluasi Model</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#prediksi-data">1.7 Prediksi Data</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#import-training-model">1.7.1 Import Training Model</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#prediksi-image">1.7.2 Prediksi Image</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#test-dengan-dataset-test">Test Dengan Dataset Test</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#membuat-bounding-box">Membuat Bounding Box</a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#prediksi-video">1.7.3 Prediksi Video</a></li>
+</ul>
+</li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Wahyu Aril Saputra
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  <p class="copyright">
+    
+      © Copyright 2022.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="_static/scripts/bootstrap.js?digest=365ca57ee442770a23c6"></script>
+<script src="_static/scripts/pydata-sphinx-theme.js?digest=365ca57ee442770a23c6"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>
